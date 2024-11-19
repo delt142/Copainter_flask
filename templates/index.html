@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-Painter</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="canvas-container">
+        <canvas id="drawingCanvas" class="canvas" width="600" height="600"></canvas>
+        <br>
+        <select id="styleSelect">
+            <option value="Cinematic">Cinematic</option>
+            <option value="3D Model">3D Model</option>
+            <option value="Anime">Anime</option>
+            <option value="Digital Art">Digital Art</option>
+            <option value="Photographic">Photographic</option>
+            <option value="Pixel art">Pixel art</option>
+            <option value="Fantasy art">Fantasy art</option>
+            <option value="Neonpunk">Neonpunk</option>
+            <option value="Manga">Manga</option>
+        </select>
+        <br>
+        <button onclick="saveDrawing()">Generate</button>
+        <button onclick="clearCanvas()">Clear</button>
+        <p id="resultMessage"></p>
+        <img id="beforeImage" class="result-image" style="display:none;" />
+        <img id="afterImage" class="result-image" style="display:none;" />
+    </div>
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        canvas.addEventListener('mousedown', () => drawing = true);
+        canvas.addEventListener('mouseup', () => drawing = false);
+        canvas.addEventListener('mousemove', draw);
+
+        function draw(event) {
+            if (!drawing) return;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000000';
+
+            ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+        }
+
+        function saveDrawing() {
+            const dataURL = canvas.toDataURL();
+            const style = document.getElementById('styleSelect').value;
+            fetch('/upload', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'image=' + encodeURIComponent(dataURL) + '&style=' + encodeURIComponent(style)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('resultMessage').textContent = 'Images saved successfully!';
+                const beforeImage = document.getElementById('beforeImage');
+                const afterImage = document.getElementById('afterImage');
+                beforeImage.src = data.before;
+                afterImage.src = data.after;
+                beforeImage.style.display = 'block';
+                afterImage.style.display = 'block';
+            });
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>

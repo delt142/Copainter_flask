@@ -1,0 +1,12 @@
+.canvas-container {
+    text-align: center;
+}
+
+.canvas {
+    border: 2px solid #29be46;
+}
+
+.result-image {
+    max-width: 300px;
+    margin: 10px;
+}
