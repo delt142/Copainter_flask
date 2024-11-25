@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, render_template, send_file
 from flask_cors import CORS
-from PIL import Image
+from PIL import Image, ImageOps
 import io
 import base64
-from model import Model
+from src.model import Model
 
 app = Flask(__name__)
 CORS(app)  # Разрешаем кросс-доменные запросы
@@ -11,11 +11,17 @@ CORS(app)  # Разрешаем кросс-доменные запросы
 model_instance = Model()
 
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
 @app.route('/generate', methods=['POST'])
 def generate_image():
     data = request.json
     image_data = base64.b64decode(data['image'])
-    image = Image.open(io.BytesIO(image_data))
+    image = Image.open(io.BytesIO(image_data)).convert("RGB")
+    image = ImageOps.invert(image)  # Инвертируем изображение для правильной обработки
 
     style = data['style']
     generated_image = model_instance.run(image, style_name=style)
