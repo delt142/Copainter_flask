@@ -7,13 +7,9 @@ import PIL.Image
 import torch
 import torchvision.transforms.functional as TF
 
-from diffusers import ControlNetModel, StableDiffusionXLControlNetPipeline, AutoencoderKL
-from diffusers import DDIMScheduler, EulerAncestralDiscreteScheduler
+from diffusers import ControlNetModel, StableDiffusionXLControlNetPipeline, AutoencoderKL, StableDiffusionPipeline, DDIMScheduler, EulerAncestralDiscreteScheduler
 from diffusers.utils import load_image
-from huggingface_hub import HfApi
-from pathlib import Path
 from PIL import Image, ImageOps
-import torch
 import numpy as np
 
 MAX_SEED = np.iinfo(np.int32).max
@@ -75,37 +71,61 @@ styles = {k["name"]: (k["prompt"], k["negative_prompt"]) for k in style_list}
 STYLE_NAMES = list(styles.keys())
 DEFAULT_STYLE_NAME = "(No style)"
 
-
 def apply_style(style_name: str, positive: str, negative: str = "") -> tuple[str, str]:
     p, n = styles.get(style_name, styles[DEFAULT_STYLE_NAME])
     return p.replace("{prompt}", positive), n + negative
-
 
 def randomize_seed_fn(seed: int, randomize_seed: bool) -> int:
     if randomize_seed:
         seed = random.randint(0, MAX_SEED)
     return seed
 
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
 class Model:
-    def __init__(self) -> None:
-        self.controlnet = ControlNetModel.from_pretrained(
-            "xinsir/controlnet-scribble-sdxl-1.0",
-            torch_dtype=torch.float16
-        )
+    def __init__(self, model_choice="gpu_default") -> None:
+        self.model_choice = model_choice
+        if model_choice == "gpu_default":
+            self.controlnet = ControlNetModel.from_pretrained(
+                "xinsir/controlnet-scribble-sdxl-1.0",
+                torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
+            )
 
-        self.vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16)
+            self.vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32)
 
-        self.pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
-            "sd-community/sdxl-flash",
-            controlnet=self.controlnet,
-            vae=self.vae,
-            torch_dtype=torch.float16,
-        )
-        self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(self.pipe.scheduler.config)
+            self.pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
+                "sd-community/sdxl-flash",
+                controlnet=self.controlnet,
+                vae=self.vae,
+                torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+            )
+            self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(self.pipe.scheduler.config)
+        elif model_choice == "gpu_alt1":
+            self.pipe = StableDiffusionPipeline.from_pretrained(
+                "runwayml/stable-diffusion-v1-5",
+                torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
+            )
+        elif model_choice == "gpu_alt2":
+            self.pipe = StableDiffusionPipeline.from_pretrained(
+                "stabilityai/stable-diffusion-2-base",
+                torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
+            )
+        elif model_choice == "cpu_default":
+            self.pipe = StableDiffusionPipeline.from_pretrained(
+                "CompVis/stable-diffusion-v1-4",
+                torch_dtype=torch.float32  # Используем float32 для совместимости с CPU
+            )
+        elif model_choice == "cpu_alt1":
+            self.pipe = StableDiffusionPipeline.from_pretrained(
+                "stabilityai/stable-diffusion-2-1-base",
+                torch_dtype=torch.float32  # Используем float32 для совместимости с CPU
+            )
+        elif model_choice == "cpu_alt2":
+            self.pipe = StableDiffusionPipeline.from_pretrained(
+                "huggingface/dalle-mini",
+                torch_dtype=torch.float32  # Используем float32 для совместимости с CPU
+            )
+        self.pipe.scheduler = DDIMScheduler.from_config(self.pipe.scheduler.config)
         self.pipe.to(device)
 
     def run(
@@ -119,7 +139,10 @@ class Model:
             controlnet_conditioning_scale: float = 1.0,
             seed: int = 0,
     ) -> PIL.Image.Image:
-        image = image.convert("RGB").resize((1024, 1024))
+        if self.model_choice.startswith("gpu") and torch.cuda.is_available():
+            image = image.convert("RGB").resize((1024, 1024))
+        else:
+            image = image.convert("RGB").resize((512, 512))  # Уменьшение размера для ускорения на CPU
 
         if not op.exists(f'images/{style_name}/'):
             os.makedirs(f'images/{style_name}/')
@@ -129,15 +152,25 @@ class Model:
 
         generator = torch.Generator(device=device).manual_seed(seed)
 
-        out = self.pipe(
-            prompt=prompt,
-            negative_prompt=negative_prompt,
-            image=image,
-            num_inference_steps=num_steps,
-            generator=generator,
-            controlnet_conditioning_scale=controlnet_conditioning_scale,
-            guidance_scale=guidance_scale,
-        ).images[0]
+        if self.model_choice.startswith("cpu"):
+            out = self.pipe(
+                prompt=prompt,
+                negative_prompt=negative_prompt,
+                init_image=image,
+                num_inference_steps=num_steps,
+                generator=generator,
+                guidance_scale=guidance_scale,
+            ).images[0]
+        else:
+            out = self.pipe(
+                prompt=prompt,
+                negative_prompt=negative_prompt,
+                image=image,
+                num_inference_steps=num_steps,
+                generator=generator,
+                controlnet_conditioning_scale=controlnet_conditioning_scale,
+                guidance_scale=guidance_scale,
+            ).images[0]
 
         out.save(f'images/{style_name}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_after.png')
 

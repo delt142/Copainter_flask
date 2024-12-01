@@ -1,14 +1,20 @@
 from flask import Flask, request, render_template, send_file
 from flask_cors import CORS
-from PIL import Image, ImageOps
+from PIL import Image
 import io
 import base64
+import json
 from src.model import Model
 
 app = Flask(__name__)
 CORS(app)  # Разрешаем кросс-доменные запросы
 
-model_instance = Model()
+# Загрузка конфигурации
+with open('static/config.json', 'r') as f:
+    config = json.load(f)
+
+model_choice = config.get('model', 'gpu_default')
+model_instance = Model(model_choice=model_choice)
 
 
 @app.route('/')
@@ -20,8 +26,23 @@ def index():
 def generate_image():
     data = request.json
     image_data = base64.b64decode(data['image'])
-    image = Image.open(io.BytesIO(image_data)).convert("RGB")
-    image = ImageOps.invert(image)  # Инвертируем изображение для правильной обработки
+    image = Image.open(io.BytesIO(image_data)).convert("RGBA")
+
+    # Преобразуем белый фон в прозрачный
+    datas = image.getdata()
+    new_data = []
+    for item in datas:
+        if item[:3] == (255, 255, 255):
+            new_data.append((255, 255, 255, 0))
+        else:
+            new_data.append(item)
+    image.putdata(new_data)
+
+    # Сохраняем временное изображение для отладки
+    image.save('debug_input_image.png')
+
+    # Конвертируем обратно в RGB перед передачей в модель
+    image = image.convert("RGB")
 
     style = data['style']
     generated_image = model_instance.run(image, style_name=style)

@@ -19,3 +19,7 @@ canvas {
 button.selected {
     border: 2px solid #29be46;
 }
+
+button {
+    margin-right: 5px;
+}
