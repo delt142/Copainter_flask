@@ -226,7 +226,7 @@ function drawShape(event) {
 }
 
 function isPointInShape(shape, x, y) {
-        switch (shape.type) {
+    switch (shape.type) {
         case 'circle':
             const radius = Math.sqrt(shape.width * shape.width + shape.height * shape.height);
             return Math.sqrt((x - shape.x) ** 2 + (y - shape.y) ** 2) <= radius;
@@ -238,7 +238,7 @@ function isPointInShape(shape, x, y) {
 }
 
 function drawAllShapes() {
-    shapes.forEach(shape => {
+        shapes.forEach(shape => {
         ctx.lineWidth = penSize;
         ctx.strokeStyle = penColor;
         ctx.fillStyle = penColor;

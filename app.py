@@ -38,10 +38,7 @@ def generate_image():
             new_data.append(item)
     image.putdata(new_data)
 
-    # Сохраняем временное изображение для отладки
-    image.save('debug_input_image.png')
-
-    # Конвертируем обратно в RGB перед передачей в модель
+    # Сохраняем изображение в RGB перед передачей в модель
     image = image.convert("RGB")
 
     style = data['style']
