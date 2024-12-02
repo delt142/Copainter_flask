@@ -41,12 +41,30 @@ let selectedShape = null;
 let undoStack = [];
 let redoStack = [];
 
+const brushSizeInput = document.getElementById('brushSize');
+const brushSizeIndicator = document.getElementById('brushSizeIndicator');
+
+function updateBrushSizeIndicator() {
+    brushSizeIndicator.style.width = `${penSize}px`;
+    brushSizeIndicator.style.height = `${penSize}px`;
+    brushSizeIndicator.style.display = 'inline-block';
+    brushSizeIndicator.style.backgroundColor = penColor;
+    brushSizeIndicator.style.borderRadius = '50%';
+    brushSizeIndicator.style.border = '1px solid black';
+}
+
+brushSizeInput.addEventListener('input', (event) => {
+    penSize = event.target.value;
+    updateBrushSizeIndicator();
+});
+
 document.getElementById('pencil').addEventListener('click', () => {
     if (config.pencil === 'on') {
         penColor = 'black';
         isLineMode = false;
         isShapeMode = false;
         setSelected('pencil');
+        updateBrushSizeIndicator();
     }
 });
 
@@ -56,6 +74,7 @@ document.getElementById('eraser').addEventListener('click', () => {
         isLineMode = false;
         isShapeMode = false;
         setSelected('eraser');
+        updateBrushSizeIndicator();
     }
 });
 
@@ -98,10 +117,6 @@ document.getElementById('redo').addEventListener('click', () => {
     if (config.redo === 'on') {
         redo();
     }
-});
-
-document.getElementById('brushSize').addEventListener('input', (event) => {
-    penSize = event.target.value;
 });
 
 canvas.addEventListener('mousedown', (event) => {
@@ -238,7 +253,7 @@ function isPointInShape(shape, x, y) {
 }
 
 function drawAllShapes() {
-        shapes.forEach(shape => {
+    shapes.forEach(shape => {
         ctx.lineWidth = penSize;
         ctx.strokeStyle = penColor;
         ctx.fillStyle = penColor;
@@ -254,7 +269,7 @@ function drawAllShapes() {
                 }
                 break;
             case 'star':
-                drawStar(ctx, shape.x, shape.y, 5, Math.sqrt(shape.width * shape.width + shape.height * shape.height) / 2, Math.sqrt(shape.width * shape.width + shape.height * shape.height) / 4);
+                drawStar(ctx, shape.x, shape.y, 5, Math.sqrt(shape.width * shape.width + shape.height * shape.height) / 2, Math.sqrt(shape.width * shape.width + shape.height * shape.height))
                 break;
         }
     });
@@ -296,8 +311,9 @@ function undo() {
         img.src = previousState;
         img.onload = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';  // Устанавливаем белый фон после восстановления
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
-            shapes.pop();
         }
     }
 }
@@ -310,8 +326,9 @@ function redo() {
         img.src = nextState;
         img.onload = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';  // Устанавливаем белый фон после восстановления
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
-            // Возможно, потребуется восстановить состояния фигур
         }
     }
 }

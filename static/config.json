@@ -4,11 +4,11 @@
     "eraser": "on",
     "clear": "on",
     "line": "on",
-    "square": "on",
-    "triangle": "on",
-    "circle": "on",
-    "star": "on",
-    "fill": "on",
+    "square": "off",
+    "triangle": "off",
+    "circle": "off",
+    "star": "off",
+    "fill": "off",
     "undo": "on",
     "redo": "on"
 }
