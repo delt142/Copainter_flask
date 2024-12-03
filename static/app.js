@@ -119,6 +119,66 @@ document.getElementById('redo').addEventListener('click', () => {
     }
 });
 
+//////////////////////////////////////////////////////////////
+canvas.addEventListener('pointerdown', (event) => {
+    saveState();
+    const x = event.clientX - canvas.offsetLeft;
+    const y = event.clientY - canvas.offsetTop;
+
+    if (isLineMode || isShapeMode) {
+        startPoint = { x, y };
+        savedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    } else {
+        drawing = true;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    }
+
+    selectedShape = shapes.find(shape => isPointInShape(shape, x, y));
+    if (selectedShape) {
+        selectedShape.offsetX = x - selectedShape.x;
+        selectedShape.offsetY = y - selectedShape.y;
+    }
+});
+
+canvas.addEventListener('pointermove', (event) => {
+    const x = event.clientX - canvas.offsetLeft;
+    const y = event.clientY - canvas.offsetTop;
+
+    if (drawing) {
+        if (isLineMode) {
+            restoreCanvas();
+            drawLine(event);
+        } else if (isShapeMode) {
+            restoreCanvas();
+            drawShape(event);
+        } else {
+            draw(event);
+        }
+    } else if (selectedShape) {
+        restoreCanvas();
+        selectedShape.x = x - selectedShape.offsetX;
+        selectedShape.y = y - selectedShape.y;
+        drawAllShapes();
+    }
+});
+
+canvas.addEventListener('pointerup', (event) => {
+    if (isLineMode && startPoint) {
+        restoreCanvas();
+        drawLine(event);
+    } else if (isShapeMode && startPoint) {
+        restoreCanvas();
+        drawShape(event);
+        saveShape(event);
+    }
+    drawing = false;
+    startPoint = null;
+    selectedShape = null;
+    saveState();
+});
+
+//////////////////////////////////////////////////////////////
 canvas.addEventListener('mousedown', (event) => {
     saveState();
     const x = event.clientX - canvas.offsetLeft;
