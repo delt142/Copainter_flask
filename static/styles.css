@@ -3,6 +3,7 @@ body {
     flex-direction: column;
     align-items: center;
     font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
 #toolbar {
@@ -22,4 +23,15 @@ button.selected {
 
 button {
     margin-right: 5px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+button, * {
+    margin-right: 5px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
