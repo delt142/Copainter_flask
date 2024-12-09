@@ -3,6 +3,9 @@ body {
     flex-direction: column;
     align-items: center;
     font-family: Arial, sans-serif;
+    overflow:hidden;
+    overflow-x: hidden; /* Запрещаем горизонтальную прокрутку */
+    overflow-y: auto; /* Разрешаем вертикальную прокрутку */
 }
 
 #toolbar {
@@ -22,4 +25,5 @@ button.selected {
 
 button {
     margin-right: 5px;
+    user-select: none;
 }
