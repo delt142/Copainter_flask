@@ -1,14 +1,14 @@
 {
-    "model": "cpu_default",
+    "model": "simple",
     "pencil": "on",
     "eraser": "on",
     "clear": "on",
     "line": "on",
-    "square": "off",
-    "triangle": "off",
-    "circle": "off",
-    "star": "off",
-    "fill": "off",
+    "square": "on",
+    "triangle": "on",
+    "circle": "on",
+    "star": "on",
+    "fill": "on",
     "undo": "on",
     "redo": "on"
 }

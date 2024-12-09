@@ -1,7 +1,8 @@
 const canvas = document.getElementById('drawingCanvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
 canvas.width = 600;
 canvas.height = 600;
+
 
 // Инициализация белого фона
 ctx.fillStyle = 'white';
@@ -24,7 +25,25 @@ function applyConfig() {
             button.style.display = value === 'on' ? 'inline-block' : 'none';
         }
     }
+
+    const shapesSelect = document.getElementById('shapes');
+    let showShapesSelect = false;
+
+    for (let i = 0; i < shapesSelect.options.length; i++) {
+        const option = shapesSelect.options[i];
+        if (config[option.value] === 'on') {
+            showShapesSelect = true;
+            option.style.display = 'block';
+        } else {
+            option.style.display = 'none';
+        }
+    }
+
+    shapesSelect.style.display = showShapesSelect ? 'inline-block' : 'none';
 }
+
+
+
 
 let drawing = false;
 let penSize = 2;
@@ -118,98 +137,6 @@ document.getElementById('redo').addEventListener('click', () => {
         redo();
     }
 });
-//////////////////////////////////////////////////////////////
-// canvas.addEventListener('pointerdown', (event) => {
-//     console.log('Pointer down:', event.pointerType, event.pointerId);
-//     saveState();
-//     const x = event.offsetX;
-//     const y = event.offsetY;
-//
-//     if (isLineMode || isShapeMode) {
-//         startPoint = { x, y };
-//         savedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-//     } else {
-//         drawing = true;
-//         ctx.beginPath();
-//         ctx.moveTo(x, y);
-//     }
-//
-//     selectedShape = shapes.find(shape => isPointInShape(shape, x, y));
-//     if (selectedShape) {
-//         selectedShape.offsetX = x - selectedShape.x;
-//         selectedShape.offsetY = y - selectedShape.y;
-//     }
-// });
-//
-// canvas.addEventListener('pointermove', (event) => {
-//     console.log('Pointer move:', event.pointerType, event.pointerId);
-//
-//     const x = event.offsetX;
-//     const y = event.offsetY;
-//
-//     if (drawing) {
-//         if (isLineMode) {
-//             restoreCanvas();
-//             drawLine({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-//         } else if (isShapeMode) {
-//             restoreCanvas();
-//             drawShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-//         } else {
-//             draw({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-//         }
-//     } else if (selectedShape) {
-//         restoreCanvas();
-//         selectedShape.x = x - selectedShape.offsetX;
-//         selectedShape.y = y - selectedShape.offsetY;
-//         drawAllShapes();
-//     }
-// });
-//
-// canvas.addEventListener('pointerup', (event) => {
-//     console.log('Pointer up:', event.pointerType, event.pointerId);
-//
-//     const x = event.offsetX;
-//     const y = event.offsetY;
-//
-//     if (isLineMode && startPoint) {
-//         restoreCanvas();
-//         drawLine({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-//     } else if (isShapeMode && startPoint) {
-//         restoreCanvas();
-//         drawShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-//         saveShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-//     }
-//     drawing = false;
-//     startPoint = null;
-//     selectedShape = null;
-//     saveState();
-// });
-//
-// canvas.addEventListener('pointerleave', (event) => {
-//     console.log('Pointer leave:', event.pointerType, event.pointerId);
-//
-//     if (drawing) {
-//         drawing = false;
-//         ctx.closePath();
-//     }
-//     selectedShape = null;
-// });
-//
-// canvas.addEventListener('pointerenter', (event) => {
-//     console.log('Pointer enter:', event.pointerType, event.pointerId);
-//     if (event.buttons === 1) {
-//         drawing = true;
-//         ctx.beginPath();
-//         ctx.moveTo(event.offsetX, event.offsetY);
-//     }
-// });
-//
-// canvas.addEventListener('pointerout', () => {
-//     drawing = false;
-//     selectedShape = null;
-// });
-
-
 
 canvas.addEventListener('mousedown', (event) => {
     saveState();
@@ -232,15 +159,13 @@ canvas.addEventListener('mousedown', (event) => {
     }
 });
 
+
 canvas.addEventListener('mousemove', (event) => {
     const x = event.offsetX;
     const y = event.offsetY;
 
     if (drawing) {
-        if (isLineMode) {
-            restoreCanvas();
-            drawLine({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-        } else if (isShapeMode) {
+        if (isLineMode || isShapeMode) {
             restoreCanvas();
             drawShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
         } else {
@@ -271,6 +196,56 @@ canvas.addEventListener('mouseup', (event) => {
     selectedShape = null;
     saveState();
 });
+
+
+function drawShape(event) {
+    if (!startPoint) return;
+    const endPoint = { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
+    const width = endPoint.x - startPoint.x;
+    const height = endPoint.y - startPoint.y;
+
+    ctx.lineWidth = penSize;
+    ctx.strokeStyle = penColor;
+    ctx.fillStyle = penColor;
+
+    switch (shapeType) {
+        case 'circle':
+            ctx.beginPath();
+            ctx.arc(startPoint.x, startPoint.y, Math.sqrt(width * width + height * height), 0, Math.PI * 2);
+            if (fillShape) {
+                ctx.fill();
+            } else {
+                ctx.stroke();
+            }
+            break;
+        case 'star':
+            drawStar(ctx, startPoint.x, startPoint.y, 5, Math.sqrt(width * width + height * height) / 2, Math.sqrt(width * width + height * height) / 4);
+            break;
+        case 'square':
+            ctx.beginPath();
+            ctx.rect(startPoint.x, startPoint.y, width, height);
+            if (fillShape) {
+                ctx.fill();
+            } else {
+                ctx.stroke();
+            }
+            break;
+        case 'triangle':
+            ctx.beginPath();
+            ctx.moveTo(startPoint.x, startPoint.y);
+            ctx.lineTo(startPoint.x + width, startPoint.y + height);
+            ctx.lineTo(startPoint.x - width, startPoint.y + height);
+            ctx.closePath();
+            if (fillShape) {
+                ctx.fill();
+            } else {
+                ctx.stroke();
+            }
+            break;
+    }
+}
+
+
 
 canvas.addEventListener('touchstart', (event) => {
     saveState();
@@ -342,78 +317,6 @@ canvas.addEventListener('touchend', (event) => {
 
 
 
-//////////////////////////////////////////////////////////////
-//canvas.addEventListener('mousedown', (event) => {
-//    saveState();
-//    const x = event.clientX - canvas.offsetLeft;
-//    const y = event.clientY - canvas.offsetTop;
-//
-//    if (isLineMode || isShapeMode) {
-//        startPoint = { x, y };
-//        savedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-//    } else {
-//        drawing = true;
-//        ctx.beginPath();
-//        ctx.moveTo(x, y);
-//    }
-//
-//    selectedShape = shapes.find(shape => isPointInShape(shape, x, y));
-//    if (selectedShape) {
-//        selectedShape.offsetX = x - selectedShape.x;
-//        selectedShape.offsetY = y - selectedShape.y;
-//    }
-//});
-//
-//canvas.addEventListener('mousemove', (event) => {
-//    const x = event.clientX - canvas.offsetLeft;
-//    const y = event.clientY - canvas.offsetTop;
-//
-//    if (drawing) {
-//        if (isLineMode) {
-//            restoreCanvas();
-//            drawLine(event);
-//        } else if (isShapeMode) {
-//            restoreCanvas();
-//            drawShape(event);
-//        } else {
-//            draw(event);
-//        }
-//    } else if (selectedShape) {
-//        restoreCanvas();
-//        selectedShape.x = x - selectedShape.offsetX;
-//        selectedShape.y = y - selectedShape.y;
-//        drawAllShapes();
-//    }
-//});
-//
-//canvas.addEventListener('mouseup', (event) => {
-//    if (isLineMode && startPoint) {
-//        restoreCanvas();
-//        drawLine(event);
-//    } else if (isShapeMode && startPoint) {
-//        restoreCanvas();
-//        drawShape(event);
-//        saveShape(event);
-//    }
-//    drawing = false;
-//    startPoint = null;
-//    selectedShape = null;
-//    saveState();
-//});
-//
-//canvas.addEventListener('mouseout', () => {
-//    drawing = false;
-//    selectedShape = null;
-//});
-//
-//canvas.addEventListener('mouseenter', (event) => {
-//    if (event.buttons === 1 && !isLineMode && !isShapeMode) {
-//        drawing = true;
-//        ctx.beginPath();
-//        ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
-//    }
-//});
-
 function draw(event) {
     ctx.lineWidth = penSize;
     ctx.lineCap = 'round';
@@ -445,31 +348,7 @@ function drawLine(event) {
     ctx.stroke();
 }
 
-function drawShape(event) {
-    if (!startPoint) return;
-    const endPoint = { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
-    const width = endPoint.x - startPoint.x;
-    const height = endPoint.y - startPoint.y;
 
-    ctx.lineWidth = penSize;
-    ctx.strokeStyle = penColor;
-    ctx.fillStyle = penColor;
-
-    switch (shapeType) {
-        case 'circle':
-            ctx.beginPath();
-            ctx.arc(startPoint.x, startPoint.y, Math.sqrt(width * width + height * height), 0, Math.PI * 2);
-            if (fillShape) {
-                ctx.fill();
-            } else {
-                ctx.stroke();
-            }
-            break;
-        case 'star':
-            drawStar(ctx, startPoint.x, startPoint.y, 5, Math.sqrt(width * width + height * height) / 2, Math.sqrt(width * width + height * height) / 4);
-            break;
-    }
-}
 
 function isPointInShape(shape, x, y) {
     switch (shape.type) {
@@ -505,12 +384,60 @@ function drawAllShapes() {
         }
     });
 }
+function saveShape(event) {
+    const endPoint = { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
+    const width = endPoint.x - startPoint.x;
+    const height = endPoint.y - startPoint.y;
+
+    const shape = {
+        type: shapeType,
+        x: startPoint.x,
+        y: startPoint.y,
+        width: width,
+        height: height,
+        fillShape: fillShape,
+        offsetX: 0,
+        offsetY: 0
+    };
+
+    shapes.push(shape);
+}
+
+function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
+    let rot = Math.PI / 2 * 3;
+    let x = cx;
+    let y = cy;
+    const step = Math.PI / spikes;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerRadius);
+    for (let i = 0; i < spikes; i++) {
+        x = cx + Math.cos(rot) * outerRadius;
+        y = cy + Math.sin(rot) * outerRadius;
+        ctx.lineTo(x, y);
+        rot += step;
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        ctx.lineTo(x, y);
+        rot += step;
+    }
+    ctx.lineTo(cx, cy - outerRadius);
+    ctx.closePath();
+    ctx.stroke();
+    if (fillShape) {
+        ctx.fill();
+    }
+}
+
+
+
 
 function restoreCanvas() {
     if (savedImageData) {
         ctx.putImageData(savedImageData, 0, 0);
     }
-//    drawAllShapes();
+    //drawAllShapes();
 }
 
 function clearCanvas() {

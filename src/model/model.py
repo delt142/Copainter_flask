@@ -86,6 +86,7 @@ class Model:
     def __init__(self, model_choice="gpu_default") -> None:
         self.model_choice = model_choice
         if model_choice == "gpu_default":
+            # Остальной код инициализации для других моделей
             self.controlnet = ControlNetModel.from_pretrained(
                 "xinsir/controlnet-scribble-sdxl-1.0",
                 torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
@@ -100,6 +101,12 @@ class Model:
                 torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
             )
             self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(self.pipe.scheduler.config)
+        elif model_choice == "simple":
+            self.pipe = StableDiffusionPipeline.from_pretrained(
+                "CompVis/stable-diffusion-v1-4",
+                torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
+            )
+
         elif model_choice == "gpu_alt1":
             self.pipe = StableDiffusionPipeline.from_pretrained(
                 "runwayml/stable-diffusion-v1-5",
@@ -138,15 +145,19 @@ class Model:
             guidance_scale: float = 5,
             controlnet_conditioning_scale: float = 1.0,
             seed: int = 0,
+            random_seed: bool = True
     ) -> PIL.Image.Image:
+        if random_seed:
+            seed = random.randint(0, MAX_SEED)
+
         if self.model_choice.startswith("gpu") and torch.cuda.is_available():
             image = image.convert("RGB").resize((1024, 1024))
         else:
             image = image.convert("RGB").resize((512, 512))  # Уменьшение размера для ускорения на CPU
 
-        if not op.exists(f'images/{style_name}/'):
-            os.makedirs(f'images/{style_name}/')
-        image.save(f'images/{style_name}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_before.png')
+        # Проверка использования начального изображения
+        initial_image_path = f'images/{style_name}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_initial.png'
+        image.save(initial_image_path)
 
         prompt, negative_prompt = apply_style(style_name, prompt, negative_prompt)
 
@@ -156,7 +167,7 @@ class Model:
             out = self.pipe(
                 prompt=prompt,
                 negative_prompt=negative_prompt,
-                init_image=image,
+                image=image,  # Используем image для инициализации
                 num_inference_steps=num_steps,
                 generator=generator,
                 guidance_scale=guidance_scale,
@@ -165,13 +176,21 @@ class Model:
             out = self.pipe(
                 prompt=prompt,
                 negative_prompt=negative_prompt,
-                image=image,
+                image=image,  # Используем image для инициализации
                 num_inference_steps=num_steps,
                 generator=generator,
                 controlnet_conditioning_scale=controlnet_conditioning_scale,
                 guidance_scale=guidance_scale,
             ).images[0]
 
-        out.save(f'images/{style_name}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_after.png')
+        # Сохранение после генерации
+        generated_image_path = f'images/{style_name}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_generated.png'
+        out.save(generated_image_path)
 
         return out.resize((600, 600))
+
+
+
+
+
+
