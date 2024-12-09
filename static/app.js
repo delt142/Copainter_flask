@@ -119,81 +119,154 @@ document.getElementById('redo').addEventListener('click', () => {
     }
 });
 //////////////////////////////////////////////////////////////
-canvas.addEventListener('pointerdown', (event) => {
+// canvas.addEventListener('pointerdown', (event) => {
+//     console.log('Pointer down:', event.pointerType, event.pointerId);
+//     saveState();
+//     const x = event.offsetX;
+//     const y = event.offsetY;
+//
+//     if (isLineMode || isShapeMode) {
+//         startPoint = { x, y };
+//         savedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+//     } else {
+//         drawing = true;
+//         ctx.beginPath();
+//         ctx.moveTo(x, y);
+//     }
+//
+//     selectedShape = shapes.find(shape => isPointInShape(shape, x, y));
+//     if (selectedShape) {
+//         selectedShape.offsetX = x - selectedShape.x;
+//         selectedShape.offsetY = y - selectedShape.y;
+//     }
+// });
+//
+// canvas.addEventListener('pointermove', (event) => {
+//     console.log('Pointer move:', event.pointerType, event.pointerId);
+//
+//     const x = event.offsetX;
+//     const y = event.offsetY;
+//
+//     if (drawing) {
+//         if (isLineMode) {
+//             restoreCanvas();
+//             drawLine({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
+//         } else if (isShapeMode) {
+//             restoreCanvas();
+//             drawShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
+//         } else {
+//             draw({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
+//         }
+//     } else if (selectedShape) {
+//         restoreCanvas();
+//         selectedShape.x = x - selectedShape.offsetX;
+//         selectedShape.y = y - selectedShape.offsetY;
+//         drawAllShapes();
+//     }
+// });
+//
+// canvas.addEventListener('pointerup', (event) => {
+//     console.log('Pointer up:', event.pointerType, event.pointerId);
+//
+//     const x = event.offsetX;
+//     const y = event.offsetY;
+//
+//     if (isLineMode && startPoint) {
+//         restoreCanvas();
+//         drawLine({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
+//     } else if (isShapeMode && startPoint) {
+//         restoreCanvas();
+//         drawShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
+//         saveShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
+//     }
+//     drawing = false;
+//     startPoint = null;
+//     selectedShape = null;
+//     saveState();
+// });
+//
+// canvas.addEventListener('pointerleave', (event) => {
+//     console.log('Pointer leave:', event.pointerType, event.pointerId);
+//
+//     if (drawing) {
+//         drawing = false;
+//         ctx.closePath();
+//     }
+//     selectedShape = null;
+// });
+//
+// canvas.addEventListener('pointerenter', (event) => {
+//     console.log('Pointer enter:', event.pointerType, event.pointerId);
+//     if (event.buttons === 1) {
+//         drawing = true;
+//         ctx.beginPath();
+//         ctx.moveTo(event.offsetX, event.offsetY);
+//     }
+// });
+//
+// canvas.addEventListener('pointerout', () => {
+//     drawing = false;
+//     selectedShape = null;
+// });
+
+
+
+canvas.addEventListener('touchstart', (event) => {
     saveState();
-    const x = event.clientX - canvas.offsetLeft;
-    const y = event.clientY - canvas.offsetTop;
+    const touch = event.touches[0];
+    const x = touch.clientX - canvas.offsetLeft;
+    const y = touch.clientY - canvas.offsetTop;
 
     if (isLineMode || isShapeMode) {
         startPoint = { x, y };
         savedImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     } else {
-        drawing = true;
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    }
 
-    selectedShape = shapes.find(shape => isPointInShape(shape, x, y));
-    if (selectedShape) {
-        selectedShape.offsetX = x - selectedShape.x;
-        selectedShape.offsetY = y - selectedShape.y;
-    }
-});
+canvas.addEventListener('touchmove', (event) => {
+    event.preventDefault(); // Предотвращение скроллинга
 
-canvas.addEventListener('pointermove', (event) => {
-    const x = event.clientX - canvas.offsetLeft;
-    const y = event.clientY - canvas.offsetTop;
+    const touch = event.touches[0];
+    const x = touch.clientX - canvas.offsetLeft;
+    const y = touch.clientY - canvas.offsetTop;
 
     if (drawing) {
         if (isLineMode) {
             restoreCanvas();
-            drawLine(event);
+            drawLine({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
         } else if (isShapeMode) {
             restoreCanvas();
-            drawShape(event);
+            drawShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
         } else {
-            draw(event);
+            draw({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
         }
     } else if (selectedShape) {
         restoreCanvas();
         selectedShape.x = x - selectedShape.offsetX;
-        selectedShape.y = y - selectedShape.y;
+        selectedShape.y = y - selectedShape.offsetY;
         drawAllShapes();
     }
 });
 
-canvas.addEventListener('pointerup', (event) => {
+canvas.addEventListener('touchend', (event) => {
+    const touch = event.changedTouches[0];
+    const x = touch.clientX - canvas.offsetLeft;
+    const y = touch.clientY - canvas.offsetTop;
+
     if (isLineMode && startPoint) {
         restoreCanvas();
-        drawLine(event);
+        drawLine({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
     } else if (isShapeMode && startPoint) {
         restoreCanvas();
-        drawShape(event);
-        saveShape(event);
+        drawShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
+        saveShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
     }
     drawing = false;
     startPoint = null;
     selectedShape = null;
     saveState();
 });
-canvas.addEventListener('pointerout', () => {
-    drawing = false;
-    selectedShape = null;
-});
 
-canvas.addEventListener('pointerenter', (event) => {
-    if (event.buttons === 1 && !isLineMode && !isShapeMode) {
-        drawing = true;
-        ctx.beginPath();
-        ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
-    }
-});
 
-canvas.addEventListener('pointerleave', (event) => {
-    console.log("leave")
-    event.preventDefault()
-
-});
 
 //////////////////////////////////////////////////////////////
 //canvas.addEventListener('mousedown', (event) => {
@@ -272,10 +345,17 @@ function draw(event) {
     ctx.lineCap = 'round';
     ctx.strokeStyle = penColor;
 
+    const x = event.clientX - canvas.offsetLeft;
+    const y = event.clientY - canvas.offsetTop;
+
+    ctx.lineTo(x, y);
     ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop );
     ctx.stroke();
-    ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+    ctx.moveTo(x, y);
 }
+
+
+
 
 function drawLine(event) {
     if (!startPoint) return;
@@ -430,4 +510,3 @@ document.getElementById('generate').addEventListener('click', () => {
 
 // Загрузка конфигурации при загрузке страницы
 window.onload = loadConfig;
-
