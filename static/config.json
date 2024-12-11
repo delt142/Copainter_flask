@@ -1,5 +1,5 @@
 {
-    "model": "simple",
+    "model": "gpu_alt2",
     "pencil": "on",
     "eraser": "on",
     "clear": "on",
@@ -10,5 +10,7 @@
     "star": "on",
     "fill": "on",
     "undo": "on",
-    "redo": "on"
+    "redo": "on",
+    "colorize": true,
+    "blackAndWhite": false
 }
