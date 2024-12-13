@@ -42,9 +42,9 @@ def generate_image():
     image = image.convert("RGB")
 
     style = data['style']
-    prompt = "transform my sketch"  # Обобщенный запрос для трансформации эскиза
-    generated_image = model_instance.run(image, prompt=prompt, style_name=style, random_seed=True)
-
+    # prompt = "cinematic still"  # Обобщенный запрос для трансформации эскиза
+    # generated_image = model_instance.run(image, prompt=prompt, style_name=style)
+    generated_image = model_instance.run(image, style_name=style)
     img_io = io.BytesIO()
     generated_image.save(img_io, 'PNG')
     img_io.seek(0)

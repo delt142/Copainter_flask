@@ -1,37 +1,67 @@
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: white;
     font-family: Arial, sans-serif;
-    /*overflow: hidden;*/
 }
 
+/* Панель инструментов */
 #toolbar {
+    position: fixed;
+    bottom: 10px;  /* Добавим отступ от края экрана */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(40, 190, 70); /* Зеленый фон */
+    padding: 10px;
     display: flex;
+    justify-content: center;
     align-items: center;
-    margin-bottom: 10px;
+    border-top: 2px solid rgb(40, 190, 70);
+    border-radius: 60px;  /* Скругленные края */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Эффект тени для визуального эффекта "парения" */
+    max-width: calc(100% - 40px);  /* Ограничим длину панели */
 }
 
-canvas {
-    border: 1px solid #29be46;
+/* Общее оформление инструментов на панели */
+#toolbar select, #toolbar button, #toolbar input[type="range"], #toolbar input[type="color"] {
+    margin: 0 10px;
+}
+
+#toolbar button.selected, #toolbar select option:checked {
+    background-color: rgb(101, 115, 255); /* Синий для выбранных элементов */
+    color: white;
+}
+
+/* Настройка выпадающих списков для показа наверх */
+#styles, #shapes {
+    position: relative;
+}
+
+#styles option, #shapes option {
+    position: absolute;
+    bottom: 100%;
     background-color: white;
 }
 
-button.selected {
-    border: 2px solid #29be46;
+/* Индикатор размера кисти */
+#brushSizeIndicator {
+    display: inline-block;
+    width: 50px; /* Зафиксированный размер квадрата */
+    height: 50px; /* Зафиксированный размер квадрата */
+    border: 1px solid black;
+    border-radius: 0%;  /* Округлый индикатор */
+    box-sizing: border-box;  /* Включаем padding и border в размер */
+    background-color: rgb(40, 190, 70);
 }
 
-button {
-    margin-right: 5px;
-    /*user-select: none;*/
-    /*-webkit-user-select: none;*/
-    /*-moz-user-select: none;*/
-    /*-ms-user-select: none;*/
+/* Настройки для отображения правильного размера индикатора кисти */
+input[type="range"] {
+    width: 150px;  /* Ширина полосы изменения размера */
 }
-/*button, * {*/
-/*    margin-right: 5px;*/
-/*    user-select: none;*/
-/*    -webkit-user-select: none;*/
-/*    -moz-user-select: none;*/
-/*    -ms-user-select: none;*/
-/*}*/
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    border: 1px solid black;
+}

@@ -1,64 +1,19 @@
-const canvas = document.getElementById('drawingCanvas');
-const ctx = canvas.getContext('2d', { willReadFrequently: true });
-canvas.width = 600;
-canvas.height = 600;
+import { config } from './config.js';
+import { canvas, ctx } from './canvas.js';
+import { saveState, undo, redo, undoStack, redoStack } from './state.js';
+import { drawShape, shapes } from './shapes.js';
 
-
-// Инициализация белого фона
-ctx.fillStyle = 'white';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-let config = {};
-
-// Функция для загрузки конфигурации
-async function loadConfig() {
-    const response = await fetch('/static/config.json');
-    config = await response.json();
-    applyConfig();
-}
-
-// Применение конфигурации
-function applyConfig() {
-    for (const [key, value] of Object.entries(config)) {
-        const button = document.getElementById(key);
-        if (button) {
-            button.style.display = value === 'on' ? 'inline-block' : 'none';
-        }
-    }
-
-    const shapesSelect = document.getElementById('shapes');
-    let showShapesSelect = false;
-
-    for (let i = 0; i < shapesSelect.options.length; i++) {
-        const option = shapesSelect.options[i];
-        if (config[option.value] === 'on') {
-            showShapesSelect = true;
-            option.style.display = 'block';
-        } else {
-            option.style.display = 'none';
-        }
-    }
-
-    shapesSelect.style.display = showShapesSelect ? 'inline-block' : 'none';
-}
-
-
-
-
+export let penSize = 2;
+export let penColor = 'black';
 let drawing = false;
-let penSize = 2;
-let penColor = 'black';
 let isLineMode = false;
 let isShapeMode = false;
 let shapeType = '';
 let fillShape = false;
 let startPoint = null;
 let savedImageData = null;
-let shapes = [];
 let selectedShape = null;
-
-let undoStack = [];
-let redoStack = [];
+let touchStartTime = null;
 
 const brushSizeInput = document.getElementById('brushSize');
 const brushSizeIndicator = document.getElementById('brushSizeIndicator');
@@ -76,6 +31,26 @@ brushSizeInput.addEventListener('input', (event) => {
     penSize = event.target.value;
     updateBrushSizeIndicator();
 });
+
+document.getElementById('colorPicker').addEventListener('input', (event) => {
+    penColor = event.target.value;
+    updateBrushSizeIndicator();
+});
+
+document.getElementById('saveSketch').addEventListener('click', saveSketch);
+
+document.getElementById('generate').addEventListener('click', () => {
+    if (config.blackAndWhite) {
+        generateBlackAndWhiteImage();
+    } else {
+        saveSketch();
+    }
+});
+
+function setSelected(buttonId) {
+    document.querySelectorAll('button').forEach(button => button.classList.remove('selected'));
+    document.getElementById(buttonId).classList.add('selected');
+}
 
 document.getElementById('pencil').addEventListener('click', () => {
     if (config.pencil === 'on') {
@@ -139,9 +114,13 @@ document.getElementById('redo').addEventListener('click', () => {
 });
 
 canvas.addEventListener('mousedown', (event) => {
-    saveState();
+    if (shapes.length > 0 || savedImageData) {
+        saveState();
+    }
+
     const x = event.offsetX;
     const y = event.offsetY;
+    touchStartTime = new Date().getTime();
 
     if (isLineMode || isShapeMode) {
         startPoint = { x, y };
@@ -158,7 +137,6 @@ canvas.addEventListener('mousedown', (event) => {
         selectedShape.offsetY = y - selectedShape.y;
     }
 });
-
 
 canvas.addEventListener('mousemove', (event) => {
     const x = event.offsetX;
@@ -182,76 +160,28 @@ canvas.addEventListener('mousemove', (event) => {
 canvas.addEventListener('mouseup', (event) => {
     const x = event.offsetX;
     const y = event.offsetY;
+    const touchEndTime = new Date().getTime();
 
     if (isLineMode && startPoint) {
         restoreCanvas();
         drawLine({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-    } else if (isShapeMode && startPoint) {
-        restoreCanvas();
-        drawShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-        saveShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
+    } else if (!isLineMode && !isShapeMode && (touchEndTime - touchStartTime < 200)) {
+        // Если короткое нажатие, ставим точку
+        drawDot({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
     }
+
     drawing = false;
     startPoint = null;
     selectedShape = null;
     saveState();
 });
 
-
-function drawShape(event) {
-    if (!startPoint) return;
-    const endPoint = { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
-    const width = endPoint.x - startPoint.x;
-    const height = endPoint.y - startPoint.y;
-
-    ctx.lineWidth = penSize;
-    ctx.strokeStyle = penColor;
-    ctx.fillStyle = penColor;
-
-    switch (shapeType) {
-        case 'circle':
-            ctx.beginPath();
-            ctx.arc(startPoint.x, startPoint.y, Math.sqrt(width * width + height * height), 0, Math.PI * 2);
-            if (fillShape) {
-                ctx.fill();
-            } else {
-                ctx.stroke();
-            }
-            break;
-        case 'star':
-            drawStar(ctx, startPoint.x, startPoint.y, 5, Math.sqrt(width * width + height * height) / 2, Math.sqrt(width * width + height * height) / 4);
-            break;
-        case 'square':
-            ctx.beginPath();
-            ctx.rect(startPoint.x, startPoint.y, width, height);
-            if (fillShape) {
-                ctx.fill();
-            } else {
-                ctx.stroke();
-            }
-            break;
-        case 'triangle':
-            ctx.beginPath();
-            ctx.moveTo(startPoint.x, startPoint.y);
-            ctx.lineTo(startPoint.x + width, startPoint.y + height);
-            ctx.lineTo(startPoint.x - width, startPoint.y + height);
-            ctx.closePath();
-            if (fillShape) {
-                ctx.fill();
-            } else {
-                ctx.stroke();
-            }
-            break;
-    }
-}
-
-
-
 canvas.addEventListener('touchstart', (event) => {
     saveState();
     const touch = event.touches[0];
     const x = touch.clientX - canvas.offsetLeft;
     const y = touch.clientY - canvas.offsetTop;
+    touchStartTime = new Date().getTime();
 
     if (isLineMode || isShapeMode) {
         startPoint = { x, y };
@@ -270,7 +200,9 @@ canvas.addEventListener('touchstart', (event) => {
 });
 
 canvas.addEventListener('touchmove', (event) => {
-    event.preventDefault(); // Предотвращение скроллинга
+    if (event.cancelable) {
+        event.preventDefault(); // Предотвращение скроллинга
+    }
 
     const touch = event.touches[0];
     const x = touch.clientX - canvas.offsetLeft;
@@ -298,24 +230,21 @@ canvas.addEventListener('touchend', (event) => {
     const touch = event.changedTouches[0];
     const x = touch.clientX - canvas.offsetLeft;
     const y = touch.clientY - canvas.offsetTop;
+    const touchEndTime = new Date().getTime();
 
     if (isLineMode && startPoint) {
         restoreCanvas();
         drawLine({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-    } else if (isShapeMode && startPoint) {
-        restoreCanvas();
-        drawShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
-        saveShape({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
+    } else if (!isLineMode && !isShapeMode && (touchEndTime - touchStartTime < 200)) {
+        // Если короткое нажатие, ставим точку
+        drawDot({ clientX: x + canvas.offsetLeft, clientY: y + canvas.offsetTop });
     }
+
     drawing = false;
     startPoint = null;
     selectedShape = null;
     saveState();
 });
-
-
-
-
 
 function draw(event) {
     ctx.lineWidth = penSize;
@@ -326,13 +255,9 @@ function draw(event) {
     const y = event.clientY - canvas.offsetTop;
 
     ctx.lineTo(x, y);
-    ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop );
     ctx.stroke();
     ctx.moveTo(x, y);
 }
-
-
-
 
 function drawLine(event) {
     if (!startPoint) return;
@@ -342,13 +267,19 @@ function drawLine(event) {
     ctx.lineCap = 'round';
     ctx.strokeStyle = penColor;
 
-//    ctx.beginPath();
     ctx.moveTo(startPoint.x, startPoint.y);
     ctx.lineTo(currentX, currentY);
     ctx.stroke();
 }
 
-
+function drawDot(event) {
+    const x = event.clientX - canvas.offsetLeft;
+    const y = event.clientY - canvas.offsetTop;
+    ctx.fillStyle = penColor;
+    ctx.beginPath();
+    ctx.arc(x, y, penSize / 2, 0, Math.PI * 2, true);
+    ctx.fill();
+}
 
 function isPointInShape(shape, x, y) {
     switch (shape.type) {
@@ -362,28 +293,13 @@ function isPointInShape(shape, x, y) {
     }
 }
 
-function drawAllShapes() {
-    shapes.forEach(shape => {
-        ctx.lineWidth = penSize;
-        ctx.strokeStyle = penColor;
-        ctx.fillStyle = penColor;
-
-        switch (shape.type) {
-            case 'circle':
-                ctx.beginPath();
-                ctx.arc(shape.x, shape.y, Math.sqrt(shape.width * shape.width + shape.height * shape.height), 0, Math.PI * 2);
-                if (shape.fillShape) {
-                    ctx.fill();
-                } else {
-                    ctx.stroke();
-                }
-                break;
-            case 'star':
-                drawStar(ctx, shape.x, shape.y, 5, Math.sqrt(shape.width * shape.width + shape.height * shape.height) / 2, Math.sqrt(shape.width * shape.width + shape.height * shape.height))
-                break;
-        }
-    });
+function restoreCanvas() {
+    if (savedImageData) {
+        ctx.putImageData(savedImageData, 0, 0);
+    }
+    drawAllShapes();
 }
+
 function saveShape(event) {
     const endPoint = { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
     const width = endPoint.x - startPoint.x;
@@ -403,6 +319,51 @@ function saveShape(event) {
     shapes.push(shape);
 }
 
+function drawAllShapes() {
+    shapes.forEach(shape => {
+        ctx.lineWidth = penSize;
+        ctx.strokeStyle = penColor;
+        ctx.fillStyle = penColor;
+
+        switch (shape.type) {
+            case 'circle':
+                ctx.beginPath();
+                ctx.arc(shape.x, shape.y, Math.sqrt(shape.width * shape.width + shape.height * shape.height), 0, Math.PI * 2);
+                if (shape.fillShape) {
+                    ctx.fill();
+                } else {
+                    ctx.stroke();
+                }
+                break;
+            case 'star':
+                drawStar(ctx, shape.x, shape.y, 5, Math.sqrt(shape.width * shape.width + shape.height * shape.height) / 2, Math.sqrt(shape.width * shape.width + shape.height * shape.height));
+                break;
+            case 'square':
+                ctx.beginPath();
+                ctx.rect(shape.x, shape.y, shape.width, shape.height);
+                if (shape.fillShape) {
+                    ctx.fill();
+                } else {
+                    ctx.stroke();
+                }
+                break;
+            case 'triangle':
+                ctx.beginPath();
+                ctx.moveTo(shape.x, shape.y);
+                ctx.lineTo(shape.x + shape.width, shape.y + shape.height);
+                ctx.lineTo(shape.x - shape.width, shape.y + shape.height);
+                ctx.closePath();
+                if (shape.fillShape) {
+                    ctx.fill();
+                } else {
+                    ctx.stroke();
+                }
+                break;
+        }
+    });
+}
+
+// Helper function to draw a star
 function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
     let rot = Math.PI / 2 * 3;
     let x = cx;
@@ -424,90 +385,80 @@ function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
     }
     ctx.lineTo(cx, cy - outerRadius);
     ctx.closePath();
-    ctx.stroke();
     if (fillShape) {
         ctx.fill();
+    } else {
+        ctx.stroke();
     }
 }
 
-
-
-
-function restoreCanvas() {
-    if (savedImageData) {
-        ctx.putImageData(savedImageData, 0, 0);
-    }
-    //drawAllShapes();
-}
-
+// Очистка холста и истории действий
 function clearCanvas() {
-    saveState();
+    undoStack.length = 0;
+    redoStack.length = 0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';  // Устанавливаем белый фон после очистки
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    shapes = [];
+    shapes.length = 0;
+    savedImageData = null;
 }
 
-function setSelected(buttonId) {
-    document.querySelectorAll('button').forEach(button => button.classList.remove('selected'));
-    document.getElementById(buttonId).classList.add('selected');
-}
+// Сохранение эскиза с черным цветом для всех непрозрачных пикселей
+function saveSketch() {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
 
-function saveState() {
-    undoStack.push(canvas.toDataURL());
-    if (undoStack.length > 20) {
-        undoStack.shift();
-    }
-    redoStack = [];
-}
+    for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
 
-function undo() {
-    if (undoStack.length > 0) {
-        redoStack.push(canvas.toDataURL());
-        let previousState = undoStack.pop();
-        let img = new Image();
-        img.src = previousState;
-        img.onload = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'white';  // Устанавливаем белый фон после восстановления
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0);
+        // Проверяем, если цвет не белый (255, 255, 255)
+        if (!(r === 255 && g === 255 && b === 255)) {
+            data[i] = 0;     // Красный
+            data[i + 1] = 0; // Зеленый
+            data[i + 2] = 0; // Синий
         }
     }
+
+    ctx.putImageData(imageData, 0, 0);
+
+//    // Сохраняем изображение
+//    const link = document.createElement('a');
+//    link.download = 'sketch.png';
+//    link.href = canvas.toDataURL();
+//    link.click();
+
+    // Восстанавливаем исходное изображение
+    ctx.putImageData(imageData, 0, 0);
 }
 
-function redo() {
-    if (redoStack.length > 0) {
-        undoStack.push(canvas.toDataURL());
-        let nextState = redoStack.pop();
-        let img = new Image();
-        img.src = nextState;
-        img.onload = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'white';  // Устанавливаем белый фон после восстановления
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0);
+// Генерация черно-белого изображения
+function generateBlackAndWhiteImage() {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+
+        // Проверяем, если цвет не белый (255, 255, 255)
+        if (!(r === 255 && g === 255 && b === 255)) {
+            data[i] = 0;     // Красный
+            data[i + 1] = 0; // Зеленый
+            data[i + 2] = 0; // Синий
         }
     }
+
+    ctx.putImageData(imageData, 0, 0);
+
+//    // Сохраняем изображение
+//    const link = document.createElement('a');
+//    link.download = 'sketch.png';
+//    link.href = canvas.toDataURL();
+//    link.click();
+
+    // Восстанавливаем исходное изображение
+    ctx.putImageData(imageData, 0, 0);
 }
-
-document.getElementById('generate').addEventListener('click', () => {
-    const dataUrl = canvas.toDataURL('image/png');
-    const style = document.getElementById('styles').value;
-
-    fetch('/generate', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ image: dataUrl.split(',')[1], style: style })
-    })
-    .then(response => response.blob())
-    .then(blob => {
-        const url = URL.createObjectURL(blob);
-        document.getElementById('result').src = url;
-    });
-});
-
-// Загрузка конфигурации при загрузке страницы
-window.onload = loadConfig;
