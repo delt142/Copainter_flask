@@ -74,10 +74,6 @@ def apply_style(style_name: str, positive: str, negative: str = "") -> tuple[str
     p, n = styles.get(style_name, styles[DEFAULT_STYLE_NAME])
     return p.replace("{prompt}", positive), n + negative
 
-# def randomize_seed_fn(seed: int, randomize_seed: bool) -> int:
-#     if randomize_seed:
-#         seed = random.randint(0, MAX_SEED)
-#     return seed
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -103,39 +99,7 @@ class Model:
             self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(
                 self.pipe.scheduler.config
             )
-
-        # elif model_choice == "simple":
-        #     self.pipe = StableDiffusionPipeline.from_pretrained(
-        #         "CompVis/stable-diffusion-v1-4",
-        #         torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
-        #     )
-        #
-        # elif model_choice == "gpu_alt1":
-        #     self.pipe = StableDiffusionPipeline.from_pretrained(
-        #         "runwayml/stable-diffusion-v1-5",
-        #         torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
-        #     )
-        # elif model_choice == "gpu_alt2":
-        #     self.pipe = StableDiffusionPipeline.from_pretrained(
-        #         "stabilityai/stable-diffusion-2-base",
-        #         torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
-        #     )
-        # elif model_choice == "cpu_default":
-        #     self.pipe = StableDiffusionPipeline.from_pretrained(
-        #         "CompVis/stable-diffusion-v1-4",
-        #         torch_dtype=torch.float32  # Используем float32 для совместимости с CPU
-        #     )
-        # elif model_choice == "cpu_alt1":
-        #     self.pipe = StableDiffusionPipeline.from_pretrained(
-        #         "stabilityai/stable-diffusion-2-1-base",
-        #         torch_dtype=torch.float32  # Используем float32 для совместимости с CPU
-        #     )
-        # elif model_choice == "cpu_alt2":
-        #     self.pipe = StableDiffusionPipeline.from_pretrained(
-        #         "huggingface/dalle-mini",
-        #         torch_dtype=torch.float32  # Используем float32 для совместимости с CPU
-        #     )
-        self.pipe.scheduler = DDIMScheduler.from_config(self.pipe.scheduler.config)
+        self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(self.pipe.scheduler.config)
         self.pipe.to(device)
 
     def run(
@@ -144,16 +108,17 @@ class Model:
             prompt: str = '',
             negative_prompt: str = '',
             style_name: str = DEFAULT_STYLE_NAME,
-            num_steps: int = 25,
-            guidance_scale: float = 5,
+            num_steps: int = 11,
+            guidance_scale: float = 3,
             controlnet_conditioning_scale: float = 1.0,
             seed: int = 0,
     ) -> PIL.Image.Image:
-
-        if self.model_choice.startswith("gpu") and torch.cuda.is_available():
-            image = image.convert("RGB").resize((512, 512))
-        else:
-            image = image.convert("RGB").resize((256, 256))  # Уменьшение размера для ускорения на CPU
+        image = PIL.ImageOps.invert(image.convert("RGB").resize((1024, 1024)))
+        # image = image.convert("RGB").resize((512, 512))
+        # if self.model_choice.startswith("gpu") and torch.cuda.is_available():
+        #     image = image.convert("RGB").resize((512, 512))
+        # else:
+        #     image = image.convert("RGB").resize((256, 256))  # Уменьшение размера для ускорения на CPU
 
         # Проверка использования начального изображения
         initial_image_path = f'images/{style_name}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_initial.png'
@@ -164,25 +129,25 @@ class Model:
         generator = torch.Generator(device=device).manual_seed(seed)
         print(prompt)
         print(negative_prompt)
-        if self.model_choice.startswith("cpu"):
-            out = self.pipe(
-                prompt=prompt,
-                negative_prompt=negative_prompt,
-                image=image,  # Используем image для инициализации
-                num_inference_steps=num_steps,
-                generator=generator,
-                guidance_scale=guidance_scale,
-            ).images[0]
-        else:
-            out = self.pipe(
-                prompt=prompt,
-                negative_prompt=negative_prompt,
-                image=image,  # Используем image для инициализации
-                num_inference_steps=num_steps,
-                generator=generator,
-                controlnet_conditioning_scale=controlnet_conditioning_scale,
-                guidance_scale=guidance_scale,
-            ).images[0]
+        # if self.model_choice.startswith("cpu"):
+        #     out = self.pipe(
+        #         prompt=prompt,
+        #         negative_prompt=negative_prompt,
+        #         image=image,  # Используем image для инициализации
+        #         num_inference_steps=num_steps,
+        #         generator=generator,
+        #         guidance_scale=guidance_scale,
+        #     ).images[0]
+        # else:
+        out = self.pipe(
+            prompt=prompt,
+            negative_prompt=negative_prompt,
+            image=image,  # Используем image для инициализации
+            num_inference_steps=num_steps,
+            generator=generator,
+            controlnet_conditioning_scale=controlnet_conditioning_scale,
+            guidance_scale=guidance_scale,
+        ).images[0]
 
         # Сохранение после генерации
         generated_image_path = f'images/{style_name}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_generated.png'

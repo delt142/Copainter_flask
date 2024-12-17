@@ -43,15 +43,21 @@ body {
     bottom: 100%;
     background-color: white;
 }
-
-/* Индикатор размера кисти */
-#brushSizeIndicator {
+#brushSizeIndicatorConteiner{
     display: inline-block;
     width: 50px; /* Зафиксированный размер квадрата */
     height: 50px; /* Зафиксированный размер квадрата */
+    background-color: rgb(40, 190, 70);
+    position: relative;
+}
+/* Индикатор размера кисти */
+#brushSizeIndicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border: 1px solid black;
-    border-radius: 0%;  /* Округлый индикатор */
-    box-sizing: border-box;  /* Включаем padding и border в размер */
+    border-radius: 50%;  /* Округлый индикатор */
     background-color: rgb(40, 190, 70);
 }
 

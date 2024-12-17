@@ -5,6 +5,7 @@ import io
 import base64
 import json
 from src.model import Model
+from waitress import serve
 
 app = Flask(__name__)
 CORS(app)  # Разрешаем кросс-доменные запросы
@@ -55,5 +56,8 @@ def generate_image():
 
 
 
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    serve(app, host="127.0.0.1", port=5000)
