@@ -1,4 +1,3 @@
-// static/js/generate.js
 import { canvas } from './canvas.js';
 
 document.getElementById('generate').addEventListener('click', () => {

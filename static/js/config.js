@@ -13,7 +13,6 @@ function applyConfig() {
             button.style.display = value === 'on' ? 'inline-block' : 'none';
         }
     }
-
     const shapesSelect = document.getElementById('shapes');
     let showShapesSelect = false;
 

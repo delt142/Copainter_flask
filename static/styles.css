@@ -6,7 +6,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* Панель инструментов */
 #toolbar {
     position: fixed;
     bottom: 10px;  /* Добавим отступ от края экрана */
@@ -67,7 +66,7 @@ input[type="range"] {
 }
 
 canvas {
-    display: block;
+
     margin: 0 auto;
     border: 1px solid black;
 }

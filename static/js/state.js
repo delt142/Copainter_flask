@@ -41,7 +41,6 @@ export function redo() {
 }
 export { undoStack, redoStack };
 
-// Добавляем обработчики событий для кнопок undo и redo
 document.getElementById('undo').addEventListener('click', () => {
     undo();
 });

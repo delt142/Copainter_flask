@@ -49,7 +49,6 @@ export function drawShape(event, startPoint, shapeType, penSize, penColor, fillS
     }
 }
 
-
 function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
     let rot = Math.PI / 2 * 3;
     let x = cx;

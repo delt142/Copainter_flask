@@ -64,6 +64,96 @@ style_list = [
         "prompt": "manga style {prompt} . vibrant, high-energy, detailed, iconic, Japanese comic style",
         "negative_prompt": "ugly, deformed, noisy, blurry, low contrast, realism, photorealistic, Western comic style",
     },
+    {
+        "name": "Dreamlike",
+        "prompt": "dreamlike {prompt} . ethereal, surreal, soft light, pastel colors, whimsical, magical, fantasy, delicate, airy, luminous",
+        "negative_prompt": "realistic, dark, harsh, violent, grotesque, dull, muted"
+    },
+    {
+        "name": "Cyberpunk",
+        "prompt": "cyberpunk {prompt} . futuristic, neon lights, dystopian, gritty, high-tech, cityscape, dark, cybernetics, urban, vibrant",
+        "negative_prompt": "natural, soft, pastoral, historic, rustic, organic"
+    },
+    {
+        "name": "Vintage",
+        "prompt": "vintage {prompt} . sepia tones, old-fashioned, nostalgic, retro, film grain, warm colors, 1960s, timeless, antique, classic",
+        "negative_prompt": "modern, futuristic, neon, cold, digital, new"
+    },
+    {
+        "name": "Mystic Forest",
+        "prompt": "mystic forest {prompt} . enchanted, misty, dense foliage, magical, twilight, ancient, serene, mystical, mysterious, lush",
+        "negative_prompt": "urban, barren, clear, man-made, desolate"
+    },
+    {
+        "name": "Steampunk",
+        "prompt": "steampunk {prompt} . Victorian, industrial, gears, steam-powered, brass, ornate, alternate history, mechanical, adventurous, intricate",
+        "negative_prompt": "high-tech, futuristic, minimalistic, clean, streamlined"
+    },
+    {
+        "name": "Fantasy Epic",
+        "prompt": "fantasy epic {prompt} . heroic, grand, mythical, detailed, vibrant, epic scale, magical creatures, medieval, adventure, dramatic",
+        "negative_prompt": "mundane, contemporary, small-scale, realistic, ordinary"
+    },
+    {
+        "name": "Abstract",
+        "prompt": "abstract {prompt} . geometric, colorful, non-representational, dynamic, bold, expressive, modern art, patterns, shapes, experimental",
+        "negative_prompt": "realistic, detailed, literal, figurative, traditional"
+    },
+    {
+        "name": "Noir",
+        "prompt": "noir {prompt} . black and white, high contrast, shadows, moody, crime, 1940s, dramatic lighting, mystery, urban, vintage",
+        "negative_prompt": "bright, colorful, cheerful, contemporary, peaceful"
+    },
+    {
+        "name": "Celestial",
+        "prompt": "celestial {prompt} . stars, galaxies, cosmic, ethereal, otherworldly, luminous, night sky, mystical, universe, stellar",
+        "negative_prompt": "earthly, mundane, terrestrial, ordinary, grounded"
+    },
+    {
+        "name": "Industrial",
+        "prompt": "industrial {prompt} . urban decay, factories, machinery, gritty, dark, high contrast, metallic, rust, dystopian, raw",
+        "negative_prompt": "natural, clean, pristine, untouched, scenic"
+    },
+    {
+        "name": "Monochromatic",
+        "prompt": "monochromatic {prompt} . one color, tonal variations, minimalistic, simple, elegant, consistent, unified, subtle, stylish, focused",
+        "negative_prompt": "multicolored, complex, chaotic, varied, mixed"
+    },
+{
+    "name": "Surrealism",
+    "prompt": "surrealism {prompt} . dreamlike, fantastical, bizarre, unexpected, juxtaposition, imaginative, whimsical, mind-bending, artistic, eccentric",
+    "negative_prompt": "realistic, ordinary, predictable, natural, conventional"
+},
+{
+    "name": "Gothic",
+    "prompt": "gothic {prompt} . dark, mysterious, ornate, eerie, historical, dramatic, shadows, architecture, melancholy, supernatural",
+    "negative_prompt": "bright, modern, plain, cheerful, straightforward"
+},
+{
+    "name": "Neon Dreams",
+    "prompt": "neon dreams {prompt} . vibrant, glowing, colorful, futuristic, nightlife, urban, electrifying, bold, high-energy, psychedelic",
+    "negative_prompt": "dull, muted, natural, understated, organic"
+},
+{
+    "name": "Pastel Paradise",
+    "prompt": "pastel paradise {prompt} . soft colors, light, airy, gentle, harmonious, serene, dreamy, delicate, whimsical, charming",
+    "negative_prompt": "harsh, bold, dark, intense, stark"
+},
+{
+    "name": "Sci-Fi",
+    "prompt": "sci-fi {prompt} . futuristic, high-tech, outer space, advanced, sleek, innovative, alien, robotic, speculative, adventurous",
+    "negative_prompt": "historic, natural, ordinary, simple, mundane"
+},
+{
+    "name": "Romantic",
+    "prompt": "romantic {prompt} . soft, warm, intimate, candlelight, dreamy, sentimental, tender, heartfelt, gentle, classic",
+    "negative_prompt": "harsh, cold, impersonal, modern, detached"
+},
+{
+    "name": "Minimalist",
+    "prompt": "minimalist {prompt} . simple, clean, uncluttered, elegant, modern, sleek, sophisticated, refined, focused, understated",
+    "negative_prompt": "complex, chaotic, detailed, ornate, busy"
+},
 ]
 
 styles = {k["name"]: (k["prompt"], k["negative_prompt"]) for k in style_list}
@@ -108,7 +198,7 @@ class Model:
             prompt: str = '',
             negative_prompt: str = '',
             style_name: str = DEFAULT_STYLE_NAME,
-            num_steps: int = 11,
+            num_steps: int = 7,
             guidance_scale: float = 3,
             controlnet_conditioning_scale: float = 1.0,
             seed: int = 0,
@@ -149,7 +239,7 @@ class Model:
             guidance_scale=guidance_scale,
         ).images[0]
 
-        # Сохранение после генерации
+
         generated_image_path = f'images/{style_name}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_generated.png'
         out.save(generated_image_path)
 

@@ -481,11 +481,6 @@ function generateBlackAndWhiteImage() {
 
     ctx.putImageData(imageData, 0, 0);
 
-//    // Сохраняем изображение
-//    const link = document.createElement('a');
-//    link.download = 'sketch.png';
-//    link.href = canvas.toDataURL();
-//    link.click();
 
     // Восстанавливаем исходное изображение
     ctx.putImageData(imageData, 0, 0);
