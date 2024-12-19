@@ -12,6 +12,5 @@
     "undo": "on",
     "redo": "on",
     "colorize": true,
-    "blackAndWhite": false,
-
+    "blackAndWhite": false
 }

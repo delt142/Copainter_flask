@@ -171,7 +171,6 @@ class Model:
     def __init__(self, model_choice="gpu_default") -> None:
         self.model_choice = model_choice
         if model_choice == "gpu_default":
-            # Остальной код инициализации для других моделей
             self.controlnet = ControlNetModel.from_pretrained(
                 "xinsir/controlnet-scribble-sdxl-1.0",
                 torch_dtype=torch.float16
@@ -198,19 +197,12 @@ class Model:
             prompt: str = '',
             negative_prompt: str = '',
             style_name: str = DEFAULT_STYLE_NAME,
-            num_steps: int = 7,
+            num_steps: int = 25,
             guidance_scale: float = 3,
             controlnet_conditioning_scale: float = 1.0,
             seed: int = 0,
     ) -> PIL.Image.Image:
         image = PIL.ImageOps.invert(image.convert("RGB").resize((1024, 1024)))
-        # image = image.convert("RGB").resize((512, 512))
-        # if self.model_choice.startswith("gpu") and torch.cuda.is_available():
-        #     image = image.convert("RGB").resize((512, 512))
-        # else:
-        #     image = image.convert("RGB").resize((256, 256))  # Уменьшение размера для ускорения на CPU
-
-        # Проверка использования начального изображения
         initial_image_path = f'images/{style_name}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_initial.png'
         image.save(initial_image_path)
 
@@ -219,20 +211,10 @@ class Model:
         generator = torch.Generator(device=device).manual_seed(seed)
         print(prompt)
         print(negative_prompt)
-        # if self.model_choice.startswith("cpu"):
-        #     out = self.pipe(
-        #         prompt=prompt,
-        #         negative_prompt=negative_prompt,
-        #         image=image,  # Используем image для инициализации
-        #         num_inference_steps=num_steps,
-        #         generator=generator,
-        #         guidance_scale=guidance_scale,
-        #     ).images[0]
-        # else:
         out = self.pipe(
             prompt=prompt,
             negative_prompt=negative_prompt,
-            image=image,  # Используем image для инициализации
+            image=image,
             num_inference_steps=num_steps,
             generator=generator,
             controlnet_conditioning_scale=controlnet_conditioning_scale,
@@ -244,9 +226,3 @@ class Model:
         out.save(generated_image_path)
 
         return out.resize((600, 600))
-
-
-
-
-
-
