@@ -6,6 +6,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
+
 #toolbar {
     position: fixed;
     bottom: 10px;  /* Добавим отступ от края экрана */
@@ -44,8 +45,8 @@ body {
 }
 #brushSizeIndicatorConteiner{
     display: inline-block;
-    width: 50px; /* Зафиксированный размер квадрата */
-    height: 50px; /* Зафиксированный размер квадрата */
+    width: 55px; /* Зафиксированный размер квадрата */
+    height: 20px; /* Зафиксированный размер квадрата */
     background-color: rgb(40, 190, 70);
     position: relative;
 }
@@ -66,7 +67,16 @@ input[type="range"] {
 }
 
 canvas {
-
-    margin: 0 auto;
+    position: fixed;
+    bottom: 100px;
+    left: 10%;
+    /*margin: 0 auto;*/
+    border: 1px solid black;
+}
+#result {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    /*margin: 0 auto;*/
     border: 1px solid black;
 }

@@ -11,6 +11,6 @@
     "fill": "off",
     "undo": "on",
     "redo": "on",
-    "colorize": true,
+    "colorize": false,
     "blackAndWhite": false
 }

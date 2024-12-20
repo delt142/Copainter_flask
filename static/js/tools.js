@@ -115,7 +115,7 @@ document.getElementById('redo').addEventListener('click', () => {
     }
 });
 
-//const eventsToBlock = [
+// const eventsToBlock = [
 //    'pointerdown',
 //    'mousedown',
 //    'pointerup',
@@ -133,14 +133,14 @@ document.getElementById('redo').addEventListener('click', () => {
 //    'pointercancel',
 //    'gotpointercapture',
 //    'lostpointercapture'
-//];
+// ];
 //
-//eventsToBlock.forEach(event => {
+// eventsToBlock.forEach(event => {
 //    document.addEventListener(event, function(e) {
 //        e.preventDefault(); // предотвращает действие по умолчанию
 //        e.stopPropagation(); // останавливает дальнейшую обработку события
 //    }, true); // true для захвата события
-//});
+// });
 
 
 canvas.addEventListener('mousedown', (event) => {
@@ -453,11 +453,6 @@ function saveSketch() {
 
     ctx.putImageData(imageData, 0, 0);
 
-//    // Сохраняем изображение
-//    const link = document.createElement('a');
-//    link.download = 'sketch.png';
-//    link.href = canvas.toDataURL();
-//    link.click();
 
     // Восстанавливаем исходное изображение
     ctx.putImageData(imageData, 0, 0);

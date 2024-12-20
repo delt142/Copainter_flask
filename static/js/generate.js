@@ -7,7 +7,7 @@ document.getElementById('generate').addEventListener('click', async () => {
 
     // Заблокировать кнопку и изменить текст
     button.disabled = true;
-    button.innerText = 'Generating...';
+    button.innerText = 'Generate Image';
 
     try {
         const response = await fetch('/generate', {
@@ -28,7 +28,6 @@ document.getElementById('generate').addEventListener('click', async () => {
     } catch (error) {
         console.error('Произошла ошибка:', error);
     } finally {
-        // Разблокировать кнопку и вернуть исходный текст
         button.disabled = false;
         button.innerText = 'Generate Image';
     }
