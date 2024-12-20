@@ -40,6 +40,8 @@ document.getElementById('colorPicker').addEventListener('input', (event) => {
 document.getElementById('saveSketch').addEventListener('click', saveSketch);
 
 document.getElementById('generate').addEventListener('click', () => {
+
+
     if (config.blackAndWhite) {
         generateBlackAndWhiteImage();
     } else {
@@ -480,7 +482,6 @@ function generateBlackAndWhiteImage() {
     }
 
     ctx.putImageData(imageData, 0, 0);
-
 
     // Восстанавливаем исходное изображение
     ctx.putImageData(imageData, 0, 0);
