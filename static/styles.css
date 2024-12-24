@@ -80,3 +80,27 @@ canvas {
     /*margin: 0 auto;*/
     border: 1px solid black;
 }
+
+#cornerImageContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    z-index: 1000; /* Чтобы изображение всегда было наверху */
+}
+#cornerImageContainer1{
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    z-index: 1000; /* Чтобы изображение всегда было наверху */
+}
+
+#cornerImage {
+    width: 550px; /* Установите нужный размер */
+    height: auto;
+}
+#cornerImage1 {
+    width: 45%; /* Установите нужный размер */
+    height: auto;
+}

@@ -62,10 +62,16 @@
         <button id="saveSketch">Save Sketch</button> <!-- Сохранение эскиза -->
         <button id="generate">Generate Image</button>
     </div>
-<div>
-    <canvas id="drawingCanvas"></canvas>
-    <img id="result" alt="Generated Image">
-</div>
+    <div>
+        <canvas id="drawingCanvas"></canvas>
+        <img id="result" alt="Generated Image">
+    </div>
+    <div id="cornerImageContainer">
+        <img id="cornerImage" src="../static/assets/logoish.png" alt="Corner Image">
+    </div>
+    <div id="cornerImageContainer1">
+        <img id="cornerImage1" src="../static/assets/logotip1.png" alt="Corner Image1">
+    </div>
     <script type="module" src="{{ url_for('static', filename='js/config.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/tools.js') }}"></script>

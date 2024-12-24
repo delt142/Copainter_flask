@@ -119,42 +119,42 @@ style_list = [
         "prompt": "monochromatic {prompt} . one color, tonal variations, minimalistic, simple, elegant, consistent, unified, subtle, stylish, focused",
         "negative_prompt": "multicolored, complex, chaotic, varied, mixed"
     },
-{
-    "name": "Surrealism",
-    "prompt": "surrealism {prompt} . dreamlike, fantastical, bizarre, unexpected, juxtaposition, imaginative, whimsical, mind-bending, artistic, eccentric",
-    "negative_prompt": "realistic, ordinary, predictable, natural, conventional"
-},
-{
-    "name": "Gothic",
-    "prompt": "gothic {prompt} . dark, mysterious, ornate, eerie, historical, dramatic, shadows, architecture, melancholy, supernatural",
-    "negative_prompt": "bright, modern, plain, cheerful, straightforward"
-},
-{
-    "name": "Neon Dreams",
-    "prompt": "neon dreams {prompt} . vibrant, glowing, colorful, futuristic, nightlife, urban, electrifying, bold, high-energy, psychedelic",
-    "negative_prompt": "dull, muted, natural, understated, organic"
-},
-{
-    "name": "Pastel Paradise",
-    "prompt": "pastel paradise {prompt} . soft colors, light, airy, gentle, harmonious, serene, dreamy, delicate, whimsical, charming",
-    "negative_prompt": "harsh, bold, dark, intense, stark"
-},
-{
-    "name": "Sci-Fi",
-    "prompt": "sci-fi {prompt} . futuristic, high-tech, outer space, advanced, sleek, innovative, alien, robotic, speculative, adventurous",
-    "negative_prompt": "historic, natural, ordinary, simple, mundane"
-},
-{
-    "name": "Romantic",
-    "prompt": "romantic {prompt} . soft, warm, intimate, candlelight, dreamy, sentimental, tender, heartfelt, gentle, classic",
-    "negative_prompt": "harsh, cold, impersonal, modern, detached"
-},
-{
-    "name": "Minimalist",
-    "prompt": "minimalist {prompt} . simple, clean, uncluttered, elegant, modern, sleek, sophisticated, refined, focused, understated",
-    "negative_prompt": "complex, chaotic, detailed, ornate, busy"
-},
-]
+    {
+        "name": "Surrealism",
+        "prompt": "surrealism {prompt} . dreamlike, fantastical, bizarre, unexpected, juxtaposition, imaginative, whimsical, mind-bending, artistic, eccentric",
+        "negative_prompt": "realistic, ordinary, predictable, natural, conventional"
+    },
+    {
+        "name": "Gothic",
+        "prompt": "gothic {prompt} . dark, mysterious, ornate, eerie, historical, dramatic, shadows, architecture, melancholy, supernatural",
+        "negative_prompt": "bright, modern, plain, cheerful, straightforward"
+    },
+    {
+        "name": "Neon Dreams",
+        "prompt": "neon dreams {prompt} . vibrant, glowing, colorful, futuristic, nightlife, urban, electrifying, bold, high-energy, psychedelic",
+        "negative_prompt": "dull, muted, natural, understated, organic"
+    },
+    {
+        "name": "Pastel Paradise",
+        "prompt": "pastel paradise {prompt} . soft colors, light, airy, gentle, harmonious, serene, dreamy, delicate, whimsical, charming",
+        "negative_prompt": "harsh, bold, dark, intense, stark"
+    },
+    {
+        "name": "Sci-Fi",
+        "prompt": "sci-fi {prompt} . futuristic, high-tech, outer space, advanced, sleek, innovative, alien, robotic, speculative, adventurous",
+        "negative_prompt": "historic, natural, ordinary, simple, mundane"
+    },
+    {
+        "name": "Romantic",
+        "prompt": "romantic {prompt} . soft, warm, intimate, candlelight, dreamy, sentimental, tender, heartfelt, gentle, classic",
+        "negative_prompt": "harsh, cold, impersonal, modern, detached"
+    },
+    {
+        "name": "Minimalist",
+        "prompt": "minimalist {prompt} . simple, clean, uncluttered, elegant, modern, sleek, sophisticated, refined, focused, understated",
+        "negative_prompt": "complex, chaotic, detailed, ornate, busy"
+    },
+    ]
 
 styles = {k["name"]: (k["prompt"], k["negative_prompt"]) for k in style_list}
 STYLE_NAMES = list(styles.keys())
@@ -197,7 +197,7 @@ class Model:
             prompt: str = '',
             negative_prompt: str = '',
             style_name: str = DEFAULT_STYLE_NAME,
-            num_steps: int = 25,
+            num_steps: int = 7,
             guidance_scale: float = 3,
             controlnet_conditioning_scale: float = 1.0,
             seed: int = 0,
