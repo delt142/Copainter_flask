@@ -1,0 +1,57 @@
+[
+    {
+        "name": "(No style)",
+        "prompt": "{prompt}",
+        "negative_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+    },
+    {
+        "name": "Shonen",
+        "prompt": "shonen {prompt} . action-packed, heroic, dynamic, youthful, energetic, vibrant, battle scenes, dramatic poses",
+        "negative_prompt": "calm, serene, realistic, mundane, soft"
+    },
+    {
+        "name": "Shojo",
+        "prompt": "shojo {prompt} . romantic, soft, pastel colors, delicate, emotional, beautiful, elegant, flowery, cute characters",
+        "negative_prompt": "harsh, dark, gritty, realistic, plain"
+    },
+    {
+        "name": "Seinen",
+        "prompt": "seinen {prompt} . mature, gritty, realistic, detailed, complex, dark themes, urban, dramatic lighting, intricate backgrounds",
+        "negative_prompt": "childish, simple, bright, cartoony, lighthearted"
+    },
+    {
+        "name": "Josei",
+        "prompt": "josei {prompt} . mature, emotional, romantic, soft, realistic, detailed, elegant, sophisticated, subtle",
+        "negative_prompt": "childish, simple, bright, cartoony, exaggerated"
+    },
+    {
+        "name": "Isekai",
+        "prompt": "isekai {prompt} . fantasy, otherworldly, magical, vibrant, adventure, mystical creatures, epic, dramatic, detailed",
+        "negative_prompt": "realistic, mundane, contemporary, plain, ordinary"
+    },
+    {
+        "name": "Mecha",
+        "prompt": "mecha {prompt} . robots, futuristic, technological, dynamic, battle scenes, detailed machinery, dramatic, action-packed",
+        "negative_prompt": "natural, organic, simple, calm, serene"
+    },
+    {
+        "name": "Slice of Life",
+        "prompt": "slice of life {prompt} . everyday scenes, peaceful, calming, realistic, detailed, light-hearted, simple, serene, cozy",
+        "negative_prompt": "dramatic, action-packed, fantastical, exaggerated, dark"
+    },
+    {
+        "name": "Fantasy",
+        "prompt": "fantasy {prompt} . magical, vibrant, mystical, detailed, otherworldly, epic, adventure, heroic, enchanting",
+        "negative_prompt": "realistic, mundane, contemporary, plain, ordinary"
+    },
+    {
+        "name": "Cyberpunk",
+        "prompt": "cyberpunk {prompt} . futuristic, neon lights, dystopian, gritty, high-tech, cityscape, dark, cybernetics, urban, vibrant",
+        "negative_prompt": "natural, soft, pastoral, historic, rustic, organic"
+    },
+    {
+        "name": "Steampunk",
+        "prompt": "steampunk {prompt} . victorian, industrial, gears, steam-powered, brass, ornate, alternate history, mechanical, adventurous, intricate",
+        "negative_prompt": "high-tech, futuristic, minimalistic, clean, streamlined"
+    }
+]

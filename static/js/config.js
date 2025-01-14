@@ -6,6 +6,18 @@ export async function loadConfig() {
     applyConfig();
 }
 
+async function loadStyles() {
+    const response = await fetch(config.style_file);
+    const styles = await response.json();
+    const stylesSelect = document.getElementById('styles');
+    styles.forEach(style => {
+        const option = document.createElement('option');
+        option.value = style.name;
+        option.textContent = style.name;
+        stylesSelect.appendChild(option);
+    });
+}
+
 function applyConfig() {
     for (const [key, value] of Object.entries(config)) {
         const button = document.getElementById(key);
@@ -32,6 +44,9 @@ function applyConfig() {
     if (!config.colorize) {
         document.getElementById('colorPicker').style.display = 'none';
     }
+
+    // Загрузка стилей после применения конфигурации
+    loadStyles();
 }
 
 // Загрузка конфигурации при загрузке страницы

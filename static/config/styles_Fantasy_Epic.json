@@ -1,0 +1,57 @@
+[
+    {
+        "name": "(No style)",
+        "prompt": "{prompt}",
+        "negative_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+    },
+    {
+        "name": "Legendary Adventure",
+        "prompt": "legendary adventure {prompt} . epic, mythical, grand, heroic, detailed, vibrant, magical, quest, medieval, dramatic",
+        "negative_prompt": "boring, mundane, contemporary, plain, realistic"
+    },
+    {
+        "name": "Epic Saga",
+        "prompt": "epic saga {prompt} . grand, mythical, vibrant, detailed, magical, heroic, adventure, medieval, epic scale, dramatic",
+        "negative_prompt": "ordinary, small-scale, modern, realistic, plain"
+    },
+    {
+        "name": "Mythical Journey",
+        "prompt": "mythical journey {prompt} . detailed, epic, grand, heroic, vibrant, magical, mythical creatures, adventure, medieval, dramatic",
+        "negative_prompt": "plain, ordinary, contemporary, realistic, small-scale"
+    },
+    {
+        "name": "Heroic Fantasy",
+        "prompt": "heroic fantasy {prompt} . grand, detailed, epic, mythical, vibrant, magical, heroic, adventure, medieval, dramatic",
+        "negative_prompt": "boring, plain, modern, ordinary, realistic"
+    },
+    {
+        "name": "Epic Legend",
+        "prompt": "epic legend {prompt} . grand, heroic, mythical, detailed, vibrant, epic scale, magical creatures, adventure, medieval, dramatic",
+        "negative_prompt": "mundane, contemporary, small-scale, realistic, ordinary"
+    },
+    {
+        "name": "Magical Realm",
+        "prompt": "magical realm {prompt} . grand, mythical, detailed, vibrant, magical, heroic, adventure, medieval, epic scale, dramatic",
+        "negative_prompt": "ordinary, small-scale, modern, realistic, plain"
+    },
+    {
+        "name": "Enchanted Kingdom",
+        "prompt": "enchanted kingdom {prompt} . grand, mythical, detailed, vibrant, magical, heroic, adventure, medieval, epic scale, dramatic",
+        "negative_prompt": "ordinary, small-scale, modern, realistic, plain"
+    },
+    {
+        "name": "Epic Tale",
+        "prompt": "epic tale {prompt} . grand, mythical, detailed, vibrant, epic scale, magical creatures, heroic, adventure, medieval, dramatic",
+        "negative_prompt": "boring, mundane, contemporary, plain, realistic"
+    },
+    {
+        "name": "Mythic Adventure",
+        "prompt": "mythic adventure {prompt} . epic, grand, mythical, detailed, vibrant, heroic, magical, medieval, adventure, dramatic",
+        "negative_prompt": "ordinary, modern, plain, realistic, small-scale"
+    },
+    {
+        "name": "Fantastical Quest",
+        "prompt": "fantastical quest {prompt} . grand, mythical, detailed, vibrant, epic scale, magical creatures, heroic, adventure, medieval, dramatic",
+        "negative_prompt": "mundane, contemporary, small-scale, realistic, ordinary"
+    }
+]

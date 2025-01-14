@@ -115,34 +115,6 @@ document.getElementById('redo').addEventListener('click', () => {
     }
 });
 
-// const eventsToBlock = [
-//    'pointerdown',
-//    'mousedown',
-//    'pointerup',
-//    'mouseup',
-//    'pointermove',
-//    'mousemove',
-//    'pointerover',
-//    'mouseover',
-//    'pointerout',
-//    'mouseout',
-//    'pointerenter',
-//    'mouseenter',
-//    'pointerleave',
-//    'mouseleave',
-//    'pointercancel',
-//    'gotpointercapture',
-//    'lostpointercapture'
-// ];
-//
-// eventsToBlock.forEach(event => {
-//    document.addEventListener(event, function(e) {
-//        e.preventDefault(); // предотвращает действие по умолчанию
-//        e.stopPropagation(); // останавливает дальнейшую обработку события
-//    }, true); // true для захвата события
-// });
-
-
 canvas.addEventListener('mousedown', (event) => {
     if (shapes.length > 0 || savedImageData) {
         saveState();

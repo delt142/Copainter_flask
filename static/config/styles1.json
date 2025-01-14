@@ -1,0 +1,57 @@
+[
+    {
+        "name": "(No style)",
+        "prompt": "{prompt}",
+        "negative_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+    },
+    {
+        "name": "Minimalist",
+        "prompt": "minimalist {prompt} . simple, clean, uncluttered, elegant, modern, sleek, sophisticated, refined, focused, understated",
+        "negative_prompt": "complex, chaotic, detailed, ornate, busy"
+    },
+    {
+        "name": "Baroque",
+        "prompt": "baroque {prompt} . elaborate, decorative, grand, detailed, luxurious, dramatic, intricate, rich, ornate",
+        "negative_prompt": "simple, minimalist, plain, modern, unadorned"
+    },
+    {
+        "name": "Pop Art",
+        "prompt": "pop art {prompt} . bold, vibrant, colorful, playful, modern, graphic, stylized, high-energy, comic-style",
+        "negative_prompt": "muted, dull, realistic, traditional, boring"
+    },
+    {
+        "name": "Art Deco",
+        "prompt": "art deco {prompt} . elegant, glamorous, geometric, symmetrical, sophisticated, metallic, sleek, 1920s, 1930s",
+        "negative_prompt": "organic, plain, rustic, modern, informal"
+    },
+    {
+        "name": "Impressionism",
+        "prompt": "impressionism {prompt} . painterly, soft, atmospheric, colorful, vibrant, brushstrokes, light, serene, dreamlike",
+        "negative_prompt": "sharp, detailed, photorealistic, harsh, precise"
+    },
+    {
+        "name": "Futuristic",
+        "prompt": "futuristic {prompt} . sleek, high-tech, advanced, cutting-edge, innovative, modern, sci-fi, streamlined, bold",
+        "negative_prompt": "retro, vintage, old-fashioned, classic, traditional"
+    },
+    {
+        "name": "Bohemian",
+        "prompt": "bohemian {prompt} . eclectic, colorful, artistic, free-spirited, laid-back, cozy, natural, vibrant, creative",
+        "negative_prompt": "formal, sterile, corporate, rigid, plain"
+    },
+    {
+        "name": "Retro",
+        "prompt": "retro {prompt} . nostalgic, vintage, old-school, 80s, 70s, vibrant, bold, colorful, iconic",
+        "negative_prompt": "modern, futuristic, contemporary, high-tech, sleek"
+    },
+    {
+        "name": "Watercolor",
+        "prompt": "watercolor {prompt} . soft, delicate, fluid, translucent, light, painterly, ethereal, subtle, airy",
+        "negative_prompt": "bold, sharp, harsh, photorealistic, detailed"
+    },
+    {
+        "name": "Abstract Expressionism",
+        "prompt": "abstract expressionism {prompt} . expressive, bold, dynamic, non-representational, colorful, chaotic, energetic, raw, artistic",
+        "negative_prompt": "realistic, detailed, literal, figurative, precise"
+    }
+]

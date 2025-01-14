@@ -1,0 +1,57 @@
+[
+    {
+        "name": "(No style)",
+        "prompt": "{prompt}",
+        "negative_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+    },
+    {
+        "name": "Christmas",
+        "prompt": "christmas {prompt} . festive, joyful, snowy, winter wonderland, decorated trees, cozy, warm, holiday lights, cheerful",
+        "negative_prompt": "summer, autumn, spring, plain, ordinary, realistic"
+    },
+    {
+        "name": "Halloween",
+        "prompt": "halloween {prompt} . spooky, dark, eerie, haunted, pumpkins, ghosts, witches, creepy, autumn, mysterious",
+        "negative_prompt": "bright, cheerful, plain, ordinary, non-spooky"
+    },
+    {
+        "name": "Easter",
+        "prompt": "easter {prompt} . colorful, springtime, flowers, eggs, bunnies, joyful, festive, pastel colors, cheerful",
+        "negative_prompt": "dark, spooky, winter, plain, dull, ordinary"
+    },
+    {
+        "name": "Valentine's Day",
+        "prompt": "valentine's day {prompt} . romantic, love, hearts, roses, soft, pastel colors, elegant, charming, affectionate",
+        "negative_prompt": "harsh, dark, plain, non-romantic, ordinary"
+    },
+    {
+        "name": "Thanksgiving",
+        "prompt": "thanksgiving {prompt} . cozy, autumn, harvest, family, warm, festive, feasting, gratitude, vibrant, traditional",
+        "negative_prompt": "summer, winter, spring, plain, modern, ordinary"
+    },
+    {
+        "name": "New Year's Eve",
+        "prompt": "new year's eve {prompt} . festive, sparkling, fireworks, glamorous, party, night, elegant, celebratory, vibrant",
+        "negative_prompt": "plain, ordinary, non-festive, dull, boring"
+    },
+    {
+        "name": "Independence Day",
+        "prompt": "independence day {prompt} . patriotic, fireworks, festive, summer, outdoor, celebration, vibrant, cheerful, joyful",
+        "negative_prompt": "plain, ordinary, non-festive, dull, boring"
+    },
+    {
+        "name": "St. Patrick's Day",
+        "prompt": "st. patrick's day {prompt} . green, festive, shamrocks, cheerful, vibrant, celebratory, lucky, traditional, lively",
+        "negative_prompt": "plain, ordinary, non-festive, dull, boring"
+    },
+    {
+        "name": "Hanukkah",
+        "prompt": "hanukkah {prompt} . festive, joyous, menorah, candles, winter, family, celebration, traditional, warm, vibrant",
+        "negative_prompt": "plain, ordinary, non-festive, dull, boring"
+    },
+    {
+        "name": "Dia de los Muertos",
+        "prompt": "dia de los muertos {prompt} . colorful, festive, vibrant, skulls, marigolds, cultural, traditional, joyful, celebratory",
+        "negative_prompt": "plain, ordinary, non-festive, dull, boring"
+    }
+]
