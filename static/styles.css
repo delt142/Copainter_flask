@@ -6,7 +6,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-
 #toolbar {
     position: fixed;
     bottom: 10px;  /* Добавим отступ от края экрана */
@@ -43,23 +42,36 @@ body {
     bottom: 100%;
     background-color: white;
 }
-#brushSizeIndicatorConteiner{
-    display: inline-block;
-    width: 55px; /* Зафиксированный размер квадрата */
-    height: 20px; /* Зафиксированный размер квадрата */
-    background-color: rgb(40, 190, 70);
-    position: relative;
+
+#brushSizeContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;  /* Пространство между элементами */
+    width: 80px;  /* Достаточно места для пикселя и размера */
+    height: 30px; /* Фиксированная высота контейнера */
 }
-/* Индикатор размера кисти */
+
 #brushSizeIndicator {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: 24px;  /* Фиксированный размер квадрата */
+    height: 24px;
     border: 1px solid black;
     border-radius: 50%;  /* Округлый индикатор */
-    background-color: rgb(40, 190, 70);
+    display: inline-block;
+    box-sizing: border-box; /* Гарантируем, что содержимое не изменит размер контейнера */
 }
+
+#brushSizeText {
+    width: 40px;  /* Фиксированный размер квадрата */
+    height: 24px;
+    background-color: rgb(40, 190, 70);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-sizing: border-box; /* Гарантируем, что содержимое не изменит размер контейнера */
+}
+
+
 
 /* Настройки для отображения правильного размера индикатора кисти */
 input[type="range"] {
@@ -70,14 +82,13 @@ canvas {
     position: fixed;
     bottom: 100px;
     left: 10%;
-    /*margin: 0 auto;*/
     border: 1px solid black;
 }
+
 #result {
     position: fixed;
     bottom: 100px;
     left: 50%;
-    /*margin: 0 auto;*/
     border: 1px solid black;
 }
 
@@ -88,7 +99,8 @@ canvas {
     padding: 10px;
     z-index: 1000; /* Чтобы изображение всегда было наверху */
 }
-#cornerImageContainer1{
+
+#cornerImageContainer1 {
     position: fixed;
     top: 0;
     left: 0;
@@ -100,6 +112,7 @@ canvas {
     width: 550px; /* Установите нужный размер */
     height: auto;
 }
+
 #cornerImage1 {
     width: 45%; /* Установите нужный размер */
     height: auto;

@@ -11,14 +11,15 @@ let touchStartTime = null;
 
 const brushSizeInput = document.getElementById('brushSize');
 const brushSizeIndicator = document.getElementById('brushSizeIndicator');
+const brushSizeText = document.getElementById('brushSizeText');
 
 function updateBrushSizeIndicator() {
-    brushSizeIndicator.style.width = `${penSize}px`;
-    brushSizeIndicator.style.height = `${penSize}px`;
-    brushSizeIndicator.style.display = 'inline-block';
-    brushSizeIndicator.style.backgroundColor = penColor;
-    brushSizeIndicator.style.borderRadius = '50%';
-    brushSizeIndicator.style.border = '1px solid black';
+    const size = Math.min(penSize, 24);  // Ограничиваем максимальный размер индикатора
+
+    brushSizeIndicator.style.width = `${size}px`;
+    brushSizeIndicator.style.height = `${size}px`;
+    brushSizeIndicator.style.backgroundColor = penColor === 'white' ? 'transparent' : penColor;
+    brushSizeText.textContent = `${penSize}`;
 }
 
 brushSizeInput.addEventListener('input', (event) => {
@@ -31,10 +32,8 @@ document.getElementById('colorPicker').addEventListener('input', (event) => {
     updateBrushSizeIndicator();
 });
 
-document.getElementById('saveSketch').addEventListener('click', saveSketch);
-
 document.getElementById('generate').addEventListener('click', () => {
-    saveSketch();
+    // Строка saveSketch была удалена
 });
 
 function setSelected(buttonId) {
