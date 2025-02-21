@@ -41,18 +41,25 @@ class Model:
                 "xinsir/controlnet-scribble-sdxl-1.0",
                 torch_dtype=torch.float16
             )
-            self.vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16)
+            self.vae = AutoencoderKL.from_pretrained(
+                "madebyollin/sdxl-vae-fp16-fix",
+                torch_dtype=torch.float16
+            )
             self.pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
                 "sd-community/sdxl-flash",
                 controlnet=self.controlnet,
                 vae=self.vae,
                 torch_dtype=torch.float16,
             )
+            # Устанавливаем планировщик
             self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(
                 self.pipe.scheduler.config
             )
-        self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(self.pipe.scheduler.config)
+            # Включаем память-эффективное внимание
+            self.pipe.enable_xformers_memory_efficient_attention()
+        # Переносим пайплайн на нужное устройство
         self.pipe.to(device)
+
 
     def run(
             self,
@@ -65,6 +72,7 @@ class Model:
             controlnet_conditioning_scale: float = 1.0,
             seed: int = 0,
     ) -> PIL.Image.Image:
+        torch.cuda.empty_cache()
         image = PIL.ImageOps.invert(image.convert("RGB").resize((1024, 1024)))
 
         # Проверка и создание директории
