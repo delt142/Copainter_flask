@@ -67,7 +67,7 @@ class Model:
             prompt: str = '',
             negative_prompt: str = '',
             style_name: str = DEFAULT_STYLE_NAME,
-            num_steps: int = 7,
+            num_steps: int = 25,
             guidance_scale: float = 3,
             controlnet_conditioning_scale: float = 1.0,
             seed: int = 0,
@@ -98,5 +98,5 @@ class Model:
 
         generated_image_path = f'{style_directory}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_generated.png'
         out.save(generated_image_path)
-
+        torch.cuda.empty_cache()
         return out.resize((600, 600))
