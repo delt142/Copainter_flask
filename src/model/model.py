@@ -1,12 +1,18 @@
 import os
 import os.path as op
 import datetime
-import random
 import json
 import PIL.Image
 import torch
 import torchvision.transforms.functional as TF
-from diffusers import ControlNetModel, StableDiffusionXLControlNetPipeline, AutoencoderKL, StableDiffusionPipeline, DDIMScheduler, EulerAncestralDiscreteScheduler
+from diffusers import (
+    ControlNetModel,
+    StableDiffusionXLControlNetPipeline,
+    AutoencoderKL,
+    StableDiffusionPipeline,
+    DDIMScheduler,
+    EulerAncestralDiscreteScheduler
+)
 from diffusers.utils import load_image
 from PIL import Image, ImageOps
 import numpy as np
@@ -60,27 +66,26 @@ class Model:
         # Переносим пайплайн на нужное устройство
         self.pipe.to(device)
 
-
     def run(
-            self,
-            image: PIL.Image.Image,
-            prompt: str = '',
-            negative_prompt: str = '',
-            style_name: str = DEFAULT_STYLE_NAME,
-            num_steps: int = 25,
-            guidance_scale: float = 3,
-            controlnet_conditioning_scale: float = 1.0,
-            seed: int = 0,
+        self,
+        image: PIL.Image.Image,
+        prompt: str = '',
+        negative_prompt: str = '',
+        style_name: str = DEFAULT_STYLE_NAME,
+        num_steps: int = 25,
+        guidance_scale: float = 3,
+        controlnet_conditioning_scale: float = 1.0,
+        seed: int = 0,
     ) -> PIL.Image.Image:
         torch.cuda.empty_cache()
         image = PIL.ImageOps.invert(image.convert("RGB").resize((1024, 1024)))
 
-        # Проверка и создание директории
+        # Проверка и создание директории для сохранения изображений
         style_directory = op.join('images', style_name)
         if not os.path.exists(style_directory):
             os.makedirs(style_directory)
 
-        initial_image_path = f'{style_directory}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_initial.png'
+        initial_image_path = f'{style_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_initial.png'
         image.save(initial_image_path)
 
         prompt, negative_prompt = apply_style(style_name, prompt, negative_prompt)
@@ -96,7 +101,7 @@ class Model:
             guidance_scale=guidance_scale,
         ).images[0]
 
-        generated_image_path = f'{style_directory}/{str(datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S"))}_generated.png'
+        generated_image_path = f'{style_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_generated.png'
         out.save(generated_image_path)
         torch.cuda.empty_cache()
         return out.resize((600, 600))

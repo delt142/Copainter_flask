@@ -1,119 +1,108 @@
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: white;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: white;
+  font-family: Arial, sans-serif;
 }
 
 #toolbar {
-    position: fixed;
-    bottom: 10px;  /* Добавим отступ от края экрана */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgb(40, 190, 70); /* Зеленый фон */
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-top: 2px solid rgb(40, 190, 70);
-    border-radius: 60px;  /* Скругленные края */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Эффект тени для визуального эффекта "парения" */
-    max-width: calc(100% - 40px);  /* Ограничим длину панели */
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(40, 190, 70);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 2px solid rgb(40, 190, 70);
+  border-radius: 60px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: calc(100% - 40px);
 }
 
-/* Общее оформление инструментов на панели */
-#toolbar select, #toolbar button, #toolbar input[type="range"], #toolbar input[type="color"] {
-    margin: 0 10px;
+#toolbar select,
+#toolbar button,
+#toolbar input[type="range"],
+#toolbar input[type="color"] {
+  margin: 0 10px;
 }
 
-#toolbar button.selected, #toolbar select option:checked {
-    background-color: rgb(101, 115, 255); /* Синий для выбранных элементов */
-    color: white;
-}
-
-/* Настройка выпадающих списков для показа наверх */
-#styles, #shapes {
-    position: relative;
-}
-
-#styles option, #shapes option {
-    position: absolute;
-    bottom: 100%;
-    background-color: white;
+#toolbar button.selected,
+#toolbar select option:checked {
+  background-color: rgb(101, 115, 255);
+  color: white;
 }
 
 #brushSizeContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;  /* Пространство между элементами */
-    width: 80px;  /* Достаточно места для пикселя и размера */
-    height: 30px; /* Фиксированная высота контейнера */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 80px;
+  height: 30px;
 }
 
 #brushSizeIndicator {
-    width: 24px;  /* Фиксированный размер квадрата */
-    height: 24px;
-    border: 1px solid black;
-    border-radius: 50%;  /* Округлый индикатор */
-    display: inline-block;
-    box-sizing: border-box; /* Гарантируем, что содержимое не изменит размер контейнера */
+  width: 24px;
+  height: 24px;
+  border: 1px solid black;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
 }
 
 #brushSizeText {
-    width: 40px;  /* Фиксированный размер квадрата */
-    height: 24px;
-    background-color: rgb(40, 190, 70);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    box-sizing: border-box; /* Гарантируем, что содержимое не изменит размер контейнера */
+  width: 40px;
+  height: 24px;
+  background-color: rgb(40, 190, 70);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-sizing: border-box;
 }
 
-
-
-/* Настройки для отображения правильного размера индикатора кисти */
 input[type="range"] {
-    width: 150px;  /* Ширина полосы изменения размера */
+  width: 150px;
 }
 
 canvas {
-    position: fixed;
-    bottom: 100px;
-    left: 10%;
-    border: 1px solid black;
+  position: fixed;
+  bottom: 100px;
+  left: 10%;
+  border: 1px solid black;
 }
 
 #result {
-    position: fixed;
-    bottom: 100px;
-    left: 50%;
-    border: 1px solid black;
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  border: 1px solid black;
 }
 
 #cornerImageContainer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    padding: 10px;
-    z-index: 1000; /* Чтобы изображение всегда было наверху */
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  z-index: 1000;
 }
 
 #cornerImageContainer1 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 10px;
-    z-index: 1000; /* Чтобы изображение всегда было наверху */
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  z-index: 1000;
 }
 
 #cornerImage {
-    width: 550px; /* Установите нужный размер */
-    height: auto;
+  width: 550px;
+  height: auto;
 }
 
 #cornerImage1 {
-    width: 45%; /* Установите нужный размер */
-    height: auto;
+  width: 45%;
+  height: auto;
 }

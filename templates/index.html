@@ -1,51 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Co-Painter Web</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-</head>
-<body>
-    <div id="toolbar">
-        <select id="styles"></select> <!-- Контейнер для стилей -->
-        <button id="pencil">Pencil</button>
-        <button id="eraser">Eraser</button>
-        <button id="clear">Clear</button>
-        <button id="line">Line</button>
-        <button id="undo">Undo</button>
-        <button id="redo">Redo</button>
-        <input type="range" id="brushSize" min="1" max="24" value="2">
-        <div id="brushSizeContainer">
-            <div id="brushSizeIndicator"></div> <!-- Индикатор размера кисти -->
-            <div id="brushSizeText"></div> <!-- Размер кисти цифрами -->
-        </div>
-        <input type="color" id="colorPicker" value="#000000"> <!-- Выбор цвета -->
-        <button id="generate">Generate Image</button>
-        <!-- Переключатель языков -->
-        <select id="languageSwitcher">
-            <option value="en" selected>English</option>
-            <option value="ru">Русский</option>
-        </select>
-    </div>
-    <div>
-        <canvas id="drawingCanvas"></canvas>
-        <img id="result" alt="Generated Image">
-    </div>
-    <div id="cornerImageContainer">
-        <img id="cornerImage" src="{{ url_for('static', filename='assets/logoish.png') }}" alt="Corner Image">
-    </div>
-    <div id="cornerImageContainer1">
-        <img id="cornerImage1" src="{{ url_for('static', filename='assets/logotip1.png') }}" alt="Corner Image1">
-    </div>
-    <script type="module" src="{{ url_for('static', filename='js/config.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/canvas.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/tools.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/shapes.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/state.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/generate.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='js/language.js') }}"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Co-Painter Vue</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- Предполагается, что Vue‑сборка генерирует файл, например, dist/main.js -->
+    <script src="{{ url_for('static', filename='dist/main.js') }}"></script>
+  </body>
 </html>

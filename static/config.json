@@ -1,12 +1,12 @@
 {
-    "model": "gpu_default",
-    "style_file": "static/config/styles_anime.json",
-    "pencil": "on",
-    "eraser": "on",
-    "clear": "on",
-    "line": "on",
-    "undo": "on",
-    "redo": "on",
-    "colorize": false,
-    "blackAndWhite": false
+  "model": "gpu_default",
+  "style_file": "static/config/styles_anime.json",
+  "pencil": "on",
+  "eraser": "on",
+  "clear": "on",
+  "line": "on",
+  "undo": "on",
+  "redo": "on",
+  "colorize": false,
+  "blackAndWhite": false
 }
