@@ -26,6 +26,11 @@ def index():
     # Шаблон index.html должен подключать скомпилированное Vue-приложение
     return render_template('index.html')
 
+@app.route('/styles', methods=['GET'])
+def get_styles():
+    with open('static/config/styles_anime.json', 'r') as f:
+        styles = json.load(f)
+    return json.dumps(styles), 200, {'Content-Type': 'application/json'}
 
 @app.route('/generate', methods=['POST'])
 def generate_image():

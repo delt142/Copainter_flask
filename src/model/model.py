@@ -72,7 +72,7 @@ class Model:
         prompt: str = '',
         negative_prompt: str = '',
         style_name: str = DEFAULT_STYLE_NAME,
-        num_steps: int = 25,
+        num_steps: int = 3,
         guidance_scale: float = 3,
         controlnet_conditioning_scale: float = 1.0,
         seed: int = 0,
