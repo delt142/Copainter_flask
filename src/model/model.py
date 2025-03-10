@@ -2,6 +2,8 @@ import os
 import os.path as op
 import datetime
 import json
+import random
+
 import PIL.Image
 import torch
 import torchvision.transforms.functional as TF
@@ -33,11 +35,14 @@ styles = {k["name"]: (k["prompt"], k["negative_prompt"]) for k in style_list}
 STYLE_NAMES = list(styles.keys())
 DEFAULT_STYLE_NAME = "(No style)"
 
+
 def apply_style(style_name: str, positive: str, negative: str = "") -> tuple[str, str]:
     p, n = styles.get(style_name, styles[DEFAULT_STYLE_NAME])
     return p.replace("{prompt}", positive), n + negative
 
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class Model:
     def __init__(self, model_choice="gpu_default") -> None:
@@ -63,45 +68,53 @@ class Model:
             )
             # Включаем память-эффективное внимание
             self.pipe.enable_xformers_memory_efficient_attention()
+            # Устанавливаем переменную окружения для уменьшения фрагментации памяти
+            os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
         # Переносим пайплайн на нужное устройство
         self.pipe.to(device)
 
     def run(
-        self,
-        image: PIL.Image.Image,
-        prompt: str = '',
-        negative_prompt: str = '',
-        style_name: str = DEFAULT_STYLE_NAME,
-        num_steps: int = 3,
-        guidance_scale: float = 3,
-        controlnet_conditioning_scale: float = 1.0,
-        seed: int = 0,
+            self,
+            image: PIL.Image.Image,
+            prompt: str = '',
+            negative_prompt: str = '',
+            style_name: str = DEFAULT_STYLE_NAME,
+            num_steps: int = 25,
+            guidance_scale: float = 3,
+            controlnet_conditioning_scale: float = 1.0,
+            seed: int = None,
     ) -> PIL.Image.Image:
         torch.cuda.empty_cache()
-        image = PIL.ImageOps.invert(image.convert("RGB").resize((1024, 1024)))
-
+        image = PIL.ImageOps.invert(image.convert("RGB").resize((700, 700)))
+        torch.cuda.empty_cache()
         # Проверка и создание директории для сохранения изображений
         style_directory = op.join('images', style_name)
         if not os.path.exists(style_directory):
             os.makedirs(style_directory)
-
+        torch.cuda.empty_cache()
         initial_image_path = f'{style_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_initial.png'
         image.save(initial_image_path)
-
+        torch.cuda.empty_cache()
         prompt, negative_prompt = apply_style(style_name, prompt, negative_prompt)
+        if seed is None:
+            seed = random.randint(0, MAX_SEED)
         generator = torch.Generator(device=device).manual_seed(seed)
+        torch.cuda.empty_cache()
+        with torch.no_grad():
+            out = self.pipe(
+                prompt=prompt,
+                negative_prompt=negative_prompt,
+                image=image,
+                num_inference_steps=num_steps,
+                generator=generator,
+                controlnet_conditioning_scale=controlnet_conditioning_scale,
+                guidance_scale=guidance_scale,
+            ).images[0]
 
-        out = self.pipe(
-            prompt=prompt,
-            negative_prompt=negative_prompt,
-            image=image,
-            num_inference_steps=num_steps,
-            generator=generator,
-            controlnet_conditioning_scale=controlnet_conditioning_scale,
-            guidance_scale=guidance_scale,
-        ).images[0]
-
+        torch.cuda.empty_cache()
         generated_image_path = f'{style_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_generated.png'
+        torch.cuda.empty_cache()
         out.save(generated_image_path)
         torch.cuda.empty_cache()
         return out.resize((600, 600))
+
