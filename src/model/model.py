@@ -44,7 +44,7 @@ def apply_style(style_name: str, positive: str, negative: str = "") -> tuple[str
     return p.replace("{prompt}", positive), n + negative
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda")
 
 
 class Model:
@@ -52,30 +52,33 @@ class Model:
         self.model_choice = model_choice
         if model_choice == "gpu_default":
             self.controlnet = ControlNetModel.from_pretrained(
-                "xinsir/controlnet-scribble-sdxl-1.0",
-                torch_dtype=torch.float16
+                # "xinsir/controlnet-union-sdxl-1.0",
+                "diffusers/controlnet-canny-sdxl-1.0",
+                torch_dtype=torch.float16,
             )
             self.vae = AutoencoderKL.from_pretrained(
                 "madebyollin/sdxl-vae-fp16-fix",
                 torch_dtype=torch.float16
             )
             self.pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
-                "sd-community/sdxl-flash",
+                "stabilityai/stable-diffusion-xl-base-1.0",
                 controlnet=self.controlnet,
                 vae=self.vae,
                 torch_dtype=torch.float16,
             )
             # Устанавливаем планировщик
-            self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(
-                self.pipe.scheduler.config
-            )
+            # self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(
+            #     self.pipe.scheduler.config
+            # )
+            # self.pipe.scheduler = DDIMScheduler.from_config(self.pipe.scheduler.config, rescale_betas_zero_snr=True)
             # Включаем память-эффективное внимание
             self.pipe.enable_xformers_memory_efficient_attention()
             # Устанавливаем переменную окружения для уменьшения фрагментации памяти
             os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
         # Переносим пайплайн на нужное устройство
-        self.pipe.to(device)
+        self.pipe.enable_model_cpu_offload()
 
+        # self.pipe.to(device)
     def run(
             self,
             image: PIL.Image.Image,
@@ -84,8 +87,8 @@ class Model:
             style_name: str = DEFAULT_STYLE_NAME,
             num_steps: int = 25,
             guidance_scale: float = 3,
-            controlnet_conditioning_scale: float = 1.0,
-            seed: int = None,
+            controlnet_conditioning_scale: float = 0.5,
+            seed: int = 0,
     ) -> PIL.Image.Image:
         torch.cuda.empty_cache()
         image = PIL.ImageOps.invert(image.convert("RGB").resize((700, 700)))
@@ -103,17 +106,28 @@ class Model:
             seed = random.randint(0, MAX_SEED)
         generator = torch.Generator(device=device).manual_seed(seed)
 
+        # # Генерация изображения
+        # with torch.no_grad():
+        #     out = self.pipe(
+        #         prompt=prompt,
+        #         negative_prompt=negative_prompt,
+        #         image=image,
+        #         num_inference_steps=num_steps,
+        #         generator=generator,
+        #         controlnet_conditioning_scale=controlnet_conditioning_scale,
+        #         guidance_scale=guidance_scale,
+        #     ).images[0]
         # Генерация изображения
-        with torch.no_grad():
-            out = self.pipe(
-                prompt=prompt,
-                negative_prompt=negative_prompt,
-                image=image,
-                num_inference_steps=num_steps,
-                generator=generator,
-                controlnet_conditioning_scale=controlnet_conditioning_scale,
-                guidance_scale=guidance_scale,
-            ).images[0]
+
+        out = self.pipe(
+            prompt=prompt,
+            negative_prompt=negative_prompt,
+            image=image,
+            num_inference_steps=num_steps,
+            generator=generator,
+            controlnet_conditioning_scale=controlnet_conditioning_scale,
+            guidance_scale=guidance_scale,
+        ).images[0]
 
         # Сохранение результата
         generated_image_path = f'{style_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_generated.png'
