@@ -21,6 +21,9 @@ import numpy as np
 
 MAX_SEED = np.iinfo(np.int32).max
 
+# Включение оптимизации памяти
+torch.backends.cudnn.benchmark = True
+
 # Загрузка конфигурации
 with open('static/config.json', 'r') as f:
     config = json.load(f)
@@ -86,20 +89,21 @@ class Model:
     ) -> PIL.Image.Image:
         torch.cuda.empty_cache()
         image = PIL.ImageOps.invert(image.convert("RGB").resize((700, 700)))
-        torch.cuda.empty_cache()
-        # Проверка и создание директории для сохранения изображений
+
         style_directory = op.join('images', style_name)
         if not os.path.exists(style_directory):
             os.makedirs(style_directory)
-        torch.cuda.empty_cache()
+
         initial_image_path = f'{style_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_initial.png'
         image.save(initial_image_path)
-        torch.cuda.empty_cache()
+
         prompt, negative_prompt = apply_style(style_name, prompt, negative_prompt)
+
         if seed is None:
             seed = random.randint(0, MAX_SEED)
         generator = torch.Generator(device=device).manual_seed(seed)
-        torch.cuda.empty_cache()
+
+        # Генерация изображения
         with torch.no_grad():
             out = self.pipe(
                 prompt=prompt,
@@ -111,10 +115,15 @@ class Model:
                 guidance_scale=guidance_scale,
             ).images[0]
 
-        torch.cuda.empty_cache()
+        # Сохранение результата
         generated_image_path = f'{style_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_generated.png'
-        torch.cuda.empty_cache()
         out.save(generated_image_path)
-        torch.cuda.empty_cache()
-        return out.resize((600, 600))
 
+        # Возврат результата перед очисткой памяти
+        result = out.resize((700, 700))
+
+        # Очистка памяти после возврата результата
+        del image, generator, out
+        torch.cuda.empty_cache()
+
+        return result
