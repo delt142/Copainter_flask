@@ -28,7 +28,7 @@ def index():
 
 @app.route('/styles', methods=['GET'])
 def get_styles():
-    with open('static/config/styles_anime.json', 'r') as f:
+    with open('static/config/styles_Fantasy_Epic.json', 'r') as f:
         styles = json.load(f)
     return json.dumps(styles), 200, {'Content-Type': 'application/json'}
 

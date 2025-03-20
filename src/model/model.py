@@ -25,7 +25,7 @@ MAX_SEED = np.iinfo(np.int32).max
 with open('static/config.json', 'r') as f:
     config = json.load(f)
 
-style_file = config.get('style_file', 'static/config/styles.json')
+style_file = config.get('style_file', 'static/config/styles_Fantasy_Epic.json')
 
 # Загрузка списка стилей из JSON файла
 with open(style_file, 'r') as f:
@@ -71,7 +71,12 @@ class Model:
             # Устанавливаем переменную окружения для уменьшения фрагментации памяти
             os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
         # Переносим пайплайн на нужное устройство
-        self.pipe.to(device)
+        # self.pipe.to(device)
+        # self.pipe.enable_model_cpu_offload()
+        # self.pipe.gradient_checkpointing_enable()
+        # self.pipe.enable_attention_slicing("auto")
+
+        self.pipe.to("cuda").to(torch.float16)
 
     def run(
             self,
@@ -115,6 +120,7 @@ class Model:
         generated_image_path = f'{style_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_generated.png'
         torch.cuda.empty_cache()
         out.save(generated_image_path)
+        del image, prompt, negative_prompt, generator
         torch.cuda.empty_cache()
-        return out.resize((600, 600))
+        return out.resize((700, 700))
 
