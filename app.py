@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, jsonify
 from flask_cors import CORS
 from PIL import Image, ImageOps
 import io
@@ -28,7 +28,7 @@ def index():
 
 @app.route('/styles', methods=['GET'])
 def get_styles():
-    with open('static/config/styles_Fantasy_Epic.json', 'r') as f:
+    with open('static/config/styles1.json', 'r') as f:
         styles = json.load(f)
     return json.dumps(styles), 200, {'Content-Type': 'application/json'}
 
@@ -58,7 +58,6 @@ def generate_image():
     generated_image.save(img_io, 'PNG')
     img_io.seek(0)
     return send_file(img_io, mimetype='image/png')
-
 
 if __name__ == '__main__':
     serve(app, host="127.0.0.1", port=8000)

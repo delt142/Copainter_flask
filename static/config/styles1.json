@@ -1,57 +1,113 @@
 [
     {
         "name": "(No style)",
-        "prompt": "{prompt}",
-        "negative_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+        "prompt": "{prompt}, hyper-realistic textures, precise details, realistic still life, realistic portraits, realistic landscapes",
+        "negative_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Minimalist",
-        "prompt": "minimalist {prompt} . simple, clean, uncluttered, elegant, modern, sleek, sophisticated, refined, focused, understated",
-        "negative_prompt": "complex, chaotic, detailed, ornate, busy"
+        "name": "Cyberpunk",
+        "prompt": "cyberpunk {prompt} . futuristic, neon lights, dystopian, gritty, high-tech, cityscape, dark, cybernetics, urban, vibrant",
+        "negative_prompt": "natural, soft, pastoral, historic, rustic, organic, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Baroque",
-        "prompt": "baroque {prompt} . elaborate, decorative, grand, detailed, luxurious, dramatic, intricate, rich, ornate",
-        "negative_prompt": "simple, minimalist, plain, modern, unadorned"
+        "name": "Digital Art",
+        "prompt": "concept art {prompt} . digital artwork, illustrative, painterly, matte painting, highly detailed",
+        "negative_prompt": "photo, photorealistic, realism, ugly, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Pop Art",
-        "prompt": "pop art {prompt} . bold, vibrant, colorful, playful, modern, graphic, stylized, high-energy, comic-style",
-        "negative_prompt": "muted, dull, realistic, traditional, boring"
+        "name": "Dreamlike",
+        "prompt": "dreamlike {prompt} . ethereal, surreal, soft light, pastel colors, whimsical, magical, fantasy, delicate, airy, luminous",
+        "negative_prompt": "realistic, dark, harsh, violent, grotesque, dull, muted, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Art Deco",
-        "prompt": "art deco {prompt} . elegant, glamorous, geometric, symmetrical, sophisticated, metallic, sleek, 1920s, 1930s",
-        "negative_prompt": "organic, plain, rustic, modern, informal"
+        "name": "Enchanted Kingdom",
+        "prompt": "enchanted kingdom {prompt} . grand, mythical, detailed, vibrant, magical, heroic, adventure, medieval, epic scale, dramatic",
+        "negative_prompt": "ordinary, small-scale, modern, realistic, plain, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Impressionism",
-        "prompt": "impressionism {prompt} . painterly, soft, atmospheric, colorful, vibrant, brushstrokes, light, serene, dreamlike",
-        "negative_prompt": "sharp, detailed, photorealistic, harsh, precise"
+        "name": "Epic Legend",
+        "prompt": "epic legend {prompt} . grand, heroic, mythical, detailed, vibrant, epic scale, magical creatures, adventure, medieval, dramatic",
+        "negative_prompt": "mundane, contemporary, small-scale, realistic, ordinary, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Futuristic",
-        "prompt": "futuristic {prompt} . sleek, high-tech, advanced, cutting-edge, innovative, modern, sci-fi, streamlined, bold",
-        "negative_prompt": "retro, vintage, old-fashioned, classic, traditional"
+        "name": "Gothic",
+        "prompt": "gothic {prompt} . dark, mysterious, ornate, eerie, historical, dramatic, shadows, architecture, melancholy, supernatural",
+        "negative_prompt": "bright, modern, plain, cheerful, straightforward, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Bohemian",
-        "prompt": "bohemian {prompt} . eclectic, colorful, artistic, free-spirited, laid-back, cozy, natural, vibrant, creative",
-        "negative_prompt": "formal, sterile, corporate, rigid, plain"
+        "name": "Magical Realm",
+        "prompt": "magical realm {prompt} . grand, mythical, detailed, vibrant, magical, heroic, adventure, medieval, epic scale, dramatic",
+        "negative_prompt": "ordinary, small-scale, modern, realistic, plain, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Retro",
-        "prompt": "retro {prompt} . nostalgic, vintage, old-school, 80s, 70s, vibrant, bold, colorful, iconic",
-        "negative_prompt": "modern, futuristic, contemporary, high-tech, sleek"
+        "name": "Mecha",
+        "prompt": "mecha {prompt} . robots, futuristic, technological, dynamic, battle scenes, detailed machinery, dramatic, action-packed",
+        "negative_prompt": "natural, organic, simple, calm, serene, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Watercolor",
-        "prompt": "watercolor {prompt} . soft, delicate, fluid, translucent, light, painterly, ethereal, subtle, airy",
-        "negative_prompt": "bold, sharp, harsh, photorealistic, detailed"
+        "name": "Pastel Paradise",
+        "prompt": "pastel paradise {prompt} . soft colors, light, airy, gentle, harmonious, serene, dreamy, delicate, whimsical, charming",
+        "negative_prompt": "harsh, bold, dark, intense, stark, erotic, explicit, adult content, violence"
     },
     {
-        "name": "Abstract Expressionism",
-        "prompt": "abstract expressionism {prompt} . expressive, bold, dynamic, non-representational, colorful, chaotic, energetic, raw, artistic",
-        "negative_prompt": "realistic, detailed, literal, figurative, precise"
+        "name": "Photographic",
+        "prompt": "cinematic photo {prompt} . 35mm photograph, film, bokeh, professional, 4k, highly detailed",
+        "negative_prompt": "drawing, painting, crayon, sketch, graphite, impressionist, noisy, blurry, soft, deformed, ugly, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Romantic",
+        "prompt": "romantic {prompt} . soft, warm, intimate, candlelight, dreamy, sentimental, tender, heartfelt, gentle, classic",
+        "negative_prompt": "harsh, cold, impersonal, modern, detached, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Fantasy Epic",
+        "prompt": "fantasy epic {prompt} . heroic, grand, mythical, detailed, vibrant, epic scale, magical creatures, medieval, adventure, dramatic",
+        "negative_prompt": "mundane, contemporary, small-scale, realistic, ordinary, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Mystic Forest",
+        "prompt": "mystic forest {prompt} . enchanted, misty, dense foliage, magical, twilight, ancient, serene, mystical, mysterious, lush",
+        "negative_prompt": "urban, barren, clear, man-made, desolate, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Fantasy",
+        "prompt": "fantasy {prompt} . magical, vibrant, mystical, detailed, otherworldly, epic, adventure, heroic, enchanting",
+        "negative_prompt": "realistic, mundane, contemporary, plain, ordinary, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Anime 2D",
+        "prompt": "stylized {prompt} . colorful characters, dynamic poses, expressive emotions, fantasy worlds, iconic 2D art style, vibrant settings, dramatic lighting",
+        "negative_prompt": "realistic proportions, muted palettes, photographic details, subtle expressions, erotic themes, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Anime 3D",
+        "prompt": "immersive {prompt} . lifelike 3D characters, detailed environments, cinematic lighting, high-energy action, expressive designs, fantasy settings, stunning animations",
+        "negative_prompt": "flat illustrations, minimal detail, muted tones, simplicity, erotic themes, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Manga",
+        "prompt": "bold {prompt} . black and white visuals, strong outlines, dramatic contrasts, action-packed panels, expressive features, unique designs, gripping storytelling, stylized drawings",
+        "negative_prompt": "colored illustrations, realistic photography, non-illustrative styles, minimalism, erotic themes, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Water World",
+        "prompt": "aquatic {prompt} . vast oceans, coral reefs, underwater creatures, shimmering waves, glowing sea plants, submerged ruins, marine life diversity, tranquil underwater scenes",
+        "negative_prompt": "dry land, urban landscapes, crowded spaces, barren settings, arid climates, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Cinematic",
+        "prompt": "dramatic {prompt} . high-definition scenes, dynamic angles, movie-like settings, rich lighting, immersive atmosphere, compelling narratives, powerful visuals, intense compositions",
+        "negative_prompt": "plain designs, static perspectives, lack of depth, minimal detail, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "Cartoon",
+        "prompt": "quirky {prompt} . abstract designs, creative characters, exaggerated proportions, unique color schemes, lively movements, imaginative storytelling, playful visuals",
+        "negative_prompt": "natural realism, muted palettes, serious tones, minimal expression, erotic themes, erotic, explicit, adult content, violence"
+    },
+    {
+        "name": "exp",
+        "prompt": "{prompt}, bold brushstrokes, expressive lines, intense color contrasts, dynamic compositions, simplified forms",
+        "negative_prompt": "blurred lines, faded color contrasts, complicated shapes, erotic themes, erotic, explicit, adult content, violence"
     }
 ]
+

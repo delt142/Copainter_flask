@@ -25,7 +25,7 @@ MAX_SEED = np.iinfo(np.int32).max
 with open('static/config.json', 'r') as f:
     config = json.load(f)
 
-style_file = config.get('style_file', 'static/config/styles_Fantasy_Epic.json')
+style_file = config.get('style_file', 'static/config/styles1.json')
 
 # Загрузка списка стилей из JSON файла
 with open(style_file, 'r') as f:
