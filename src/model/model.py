@@ -71,8 +71,8 @@ class Model:
             # Устанавливаем переменную окружения для уменьшения фрагментации памяти
             os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
         # Переносим пайплайн на нужное устройство
-        # self.pipe.to(device)
-        # self.pipe.enable_model_cpu_offload()
+        self.pipe.to(device)
+        self.pipe.enable_model_cpu_offload()
         # self.pipe.gradient_checkpointing_enable()
         # self.pipe.enable_attention_slicing("auto")
 
@@ -120,7 +120,17 @@ class Model:
         generated_image_path = f'{style_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_generated.png'
         torch.cuda.empty_cache()
         out.save(generated_image_path)
+        imageinit =  Image.open(initial_image_path)
+        imagegen = Image.open(generated_image_path)
+        new_width = 1400
+        new_height = 700
+        imagegen = imagegen.resize(imageinit.size)
+        new_image = Image.new('RGB', (new_width, new_height))
+        new_image.paste(imageinit, (0, 0))
+        new_image.paste(imagegen, (700, 0))
+        resave_directory = op.join('images', 'resave')
+        new_image.save(f'{resave_directory}/{datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")}_resave.png')
+
         del image, prompt, negative_prompt, generator
         torch.cuda.empty_cache()
         return out.resize((700, 700))
-
